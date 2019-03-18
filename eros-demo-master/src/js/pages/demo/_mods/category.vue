@@ -13,14 +13,6 @@
 		background-color: #1da1f2;
 		justify-content: center;
 	}
-	.category-1 {
-		margin-top: 20px;
-		padding-left: 24px;
-		width: 750px;
-		height: 68px;
-		background-color: #1da1f2;
-		justify-content: center;
-	}
 	.category-text {
 		font-weight: 600;
 		font-size: 28px;
