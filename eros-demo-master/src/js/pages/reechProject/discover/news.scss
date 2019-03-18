@@ -1,0 +1,51 @@
+// 发现模块的容器布局
+.container-discovery{
+  background-color: #272C39;
+  margin-bottom: 96px;
+}
+// 发现模块上方的切换标签布局
+.nav-discovery{
+  background-color: #272C39;
+  height: 88px;
+  width: auto;
+  margin-top: 40px;
+}
+.d-top-tab{
+  color: #9BA3B2;
+  size: 32px;
+}
+// 资讯列表布局
+.r-list{
+  padding-left: 36px;
+  padding-right:36px;
+}
+// 资讯item的title
+.d-title{
+  color: #FFFFFF;
+  size: 28px;
+  flex:1;
+}
+.d-image{
+  width:auto;
+  height: 308px;
+  margin-top: 28px;
+  margin-bottom: 28px;
+  border-radius: 5px;
+}
+
+.d-state-text{
+  color: #9BA3B2;
+  size: 26px;
+}
+
+.layout-h{
+  flex-direction: row;
+  align-items: center;
+}
+
+.layout-v{
+  flex-direction: column;
+  align-items: center;
+}
+
+

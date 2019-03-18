@@ -1,0 +1,74 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #1A2131;
+  color: #333;
+}
+
+.mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #272C39;
+}
+
+.app-wrapper {
+  background-color: #1A2131;
+}
+
+.r-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.iconfont {
+  font-family: iconfont;
+}
+
+.wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #272C39;
+}
+
+.main-scroller {
+  margin-top: 54px;
+  margin-bottom: 0px;
+}
+
+.cell-button {
+  padding-bottom: 18px;
+}
+
+.slogan {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  background-color: #272C39;
+}
+
+.i-slg {
+  height: 66px;
+  font-size: 26px;
+  padding-top: 16px;
+  flex: 1;
+  text-align: center;
+  color: #b4282d;
+}
+
+.indicator {
+  position: absolute;
+  left: 310px;
+  color: #888888;
+  font-size: 30px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
