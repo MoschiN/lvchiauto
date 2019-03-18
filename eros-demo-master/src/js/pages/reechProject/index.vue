@@ -2,7 +2,7 @@
   <div>
     
     <div class="container">
-      <d-news :token="loginInfo.data.token" v-if="curIndex===0"/>
+      <d-news :loginInfo="loginInfo" v-if="curIndex===0"/>
       <my-car v-else-if="curIndex===1"></my-car>
       <my-server v-else-if="curIndex===2"></my-server>
       <my-mine v-else></my-mine>
@@ -41,13 +41,17 @@ import myCar from './myCar/index.vue'
 import myServer from './server/index.vue'
 import myMine from './personal/index.vue'
 import paramDao from './paramDao'
-
+import customAjax from './utils/customAjax'
+const modal = weex.requireModule('modal')
 const stream = weex.requireModule('stream')
+const axios = weex.requireModule('bmAxios')
+
 export default {
   created(){
     // 安卓自定义退出 app
     this.androidFinishApp()
-    this.authLoginBySms('15313659181','1234')
+    // this.authLoginBySms('15313659181','1234')
+    this.authLoginByPwd('18240349328','123456')
   },
   components:{
     'd-news':dNews,
@@ -74,31 +78,19 @@ export default {
         // 登录请求
         authLoginBySms(phoneNum,sms){
           var paramMap=new Map()
-          paramMap.set('mobile',phoneNum)
-          paramMap.set('code',sms)
-          // stream.fetch({
-          //   method: 'POST',
-          //   url: 'http://10.120.8.187:9966/s-user/clientDetails/list',
-          //   type:'text',
-          //   body:'username=18240349328&password=123456',
-          // }, function(ret) {
-          //   var modal = weex.requireModule('modal')
-          //   modal.toast({
-          //       message: 'This is a toast',
-          //       duration: 3,
-          
-          //   })
-          // })
+          paramMap.set('mobileNum',phoneNum)
+          paramMap.set('smsCode',sms)
+         
           this.$fetch({
               method: 'POST',    // 大写
-              name:'http://10.120.8.187:9966/s-user/clientDetails/list',
-              // name: 'AUTH.loginBySms', //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
-              data: paramDao.getParamsJSON(paramMap),
-             
+              name: 'AUTH.loginBySms', //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
+              data: paramDao.getParamsJSON(paramMap)
           }).then(resData => {
-            this.$notice.toast({
-                message:resData
-              })
+              // this.$notice.toast({
+              //     message:resData.data.token
+              // })
+            this.loginInfo=resData
+            console.log(resData)
           }, error => {
               // 错误回调
               this.$notice.toast({
@@ -107,6 +99,45 @@ export default {
               console.log(error)
           })
         },
+        authLoginByPwd(userName,pwd){
+          var paramMap=new Map()
+          paramMap.set('username',userName)
+          paramMap.set('password',pwd)
+      
+        this.$fetch({
+              method: 'POST',    // 大写
+              // url:'http://10.120.8.187:7766/login/pwd',
+              name: 'AUTH.loginByPwd', //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
+              // data: 'username=18240349328&password=123456',
+              data: paramDao.getParamsForm(paramMap),
+              // header:{
+              //   'Content-Type':'application/x-www-form-urlencoded'
+              // }
+          }).then(resData => {
+              // this.$notice.toast({
+              //   // "token":{
+              //     // "access_token":"0a63560e-f3df-48cb-8516-17d140811306",
+              //     // "refresh_token":"e4bf0f88-18bd-418b-b109-de468bfc6347",
+              //     // "scope":"abc aab",
+              //     // "token_type":"bearer",
+              //     // "expires_in":6371}
+              //     message:resData.data.token
+              // })
+              this.loginInfo=resData
+              // 将登陆信息持久化保存到本地,供各个界面使用.
+              this.$storage.setSync('loginInfo', resData)
+               // 初始化推荐页
+              this.$event.emit('discoveryQ',{index:0,isRefresh:0})
+            console.log(resData)
+          }, error => {
+              // 错误回调
+              this.$notice.toast({
+                message:error
+              })
+              console.log(error)
+          })
+        },
+        
         
   },
   data() {

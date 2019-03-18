@@ -1,7 +1,7 @@
 <template>
-    <div class="wrapper" style="background-color: #272C39">
+    <div class="wrapper" >
         <nav class="navi" title="消息中心" right-text="全部已读" text-color="#ffffff" text-font=28></nav>
-        <scroller class="main-list" offset-accuracy="300px">
+        <scroller  show-scrollbar="false" class="main-list" style="background-color: #272C39" offset-accuracy="300px">
             <div class="cell-one" v-for="i in list">
                <message-cell :model="i"> </message-cell>
             </div>

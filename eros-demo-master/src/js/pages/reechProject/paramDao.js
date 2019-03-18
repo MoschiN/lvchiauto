@@ -1,14 +1,8 @@
 
-// 用于请求服务器的参数拼接
-const defaultMap = {
-    ct: 'android',
-    cv: '1.0'
-}
-
 export default {
-    test: '测试时',
     getParamsJSON,
     getParamsForm,
+    isEmpty,
 }
 function get() {
     return '0'
@@ -24,26 +18,33 @@ function getParamsJSON(paramMap) {
     // 将key转化为数组,然后按字符串ascii码进行默认排序
     var keysArray = [...paramMap.keys()].sort()
     // 拼接
-    var json = {}
+    var jsonObj = {}
     var signStr = ''
     for (const key in keysArray) {
-        json[keysArray[key]] = paramMap.get(keysArray[key])
+        jsonObj[keysArray[key]] = paramMap.get(keysArray[key])
         signStr += keysArray[key] + '=' + paramMap.get(keysArray[key]) + '&'
     }
-    json['reechautoSign'] = MD5.hex_md5(signStr + "reechauto@123")
-    return json;
+    jsonObj['reechautoSign'] = MD5.hex_md5(signStr + "reechauto@123")
+    return jsonObj
 }
 function getParamsForm(paramMap) {
     // 添加客户端信息和时间戳
-    // paramMap.set('ct', 'android')
-    // paramMap.set('cv', '1.0')
-    // paramMap.set('timeStamp', new Date().getTime())
+    paramMap.set('ct', 'android')
+    paramMap.set('cv', '1.0')
+    paramMap.set('timeStamp', new Date().getTime())
     // 将key转化为数组,然后按字符串ascii码进行默认排序
     var keysArray = [...paramMap.keys()].sort()
     // 拼接
-    var signStr = ''
+    var formText = ''
     for (const key in keysArray) {
-        signStr += keysArray[key] + '=' + paramMap.get(keysArray[key]) + '&'
+        formText += '&' + keysArray[key] + '=' + paramMap.get(keysArray[key])
     }
-    return signStr;
+    return formText.substring(1)
+}
+
+function isEmpty(param) {
+    if (typeof (param) == 'undefined' || param == 'undefined' || param == 'null' || param == 'NULL' || param == 'Null' || param == '' || param == null)
+        return true
+    else
+        return false
 }

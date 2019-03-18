@@ -18,24 +18,27 @@ import textTabBar from '../nav/textnavbar'
 import paramDao from '../paramDao'
 export default {
     created(){
+        // this.$storage.get('loginInfo').then(loginInfo=>{
+
+        // })
+       
         this.$router.getParams().then(resData => {
             this.token=resData
         })
         // 发布按钮
         this.$event.on(this.onRightTag, params => {
+          var loginInfo=this.$storage.getSync('loginInfo');
           var paramMap=new Map()
           paramMap.set('context',this.context)
           paramMap.set('imagesUrl',this.getImageUrlsParams())
-     
-          this.$notice.toast({
-                message:paramDao.getParamsJSON(paramMap)
-              })
+          paramMap.set('userId',loginInfo.data.userInfo.userId)
+          
           this.$fetch({
               method: 'POST',    // 大写
               name: 'DISCOVERY.pushDynamic', //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
-              data: paramDao.getParamsJSON(paramMap),
+              data: paramDao.getParamsForm(paramMap),
               header:{
-                'token':this.token
+                    'Authorization':'Bearer  '+loginInfo.data.token.access_token
               }
           }).then(resData => {
               if(resData.code===1000){
@@ -69,17 +72,18 @@ export default {
     },
     methods:{
         uploadImage(){
+            var loginInfo=this.$storage.getSync('loginInfo');
             this.$image.pickAndUpload({
-                url: 'http://10.120.8.187:8661/api/file/upload',                     // 自定义图片上传地址，默认上传地址是 eros.native.js 中的 image 地址
+                url: 'http://10.120.8.187:7766/news/file/uploadFile',                     // 自定义图片上传地址，默认上传地址是 eros.native.js 中的 image 地址
                 maxCount: 9,                 // 一次最多可选择图片数量 最大支持9张 默认是1
                 imageWidth: 1000,            // 图片宽度（根据宽度按比例裁剪）可以不传默认为 800px
                 allowCrop: false,             // 是否允许编辑（只有当 maxCount == 1时 此参数才会生效） 默认是false
                 params: {
 
                 },                  // 传递的参数
-                header: {
-                    'token':this.token
-                }                   // 自定义请求 header
+                header:{
+                    'Authorization':'Bearer  '+loginInfo.data.token.access_token
+                }                  // 自定义请求 header
             })
             .then(resData => {
                 // resData=[]
@@ -87,12 +91,9 @@ export default {
                 // resData.push(imgTemp)
                 for(var i=0;i<resData.length;i++){
                     if(resData[i].code===1000){
-                        this.addImage(resData[i].data)
+                        this.addImage(resData[i].data.context)
                     }
                 }
-                this.$notice.toast({
-                    message:resData
-                })
                 console.log(resData)    // [url1, url2...]
             }, error => {
                 console.log(error)
@@ -141,4 +142,3 @@ export default {
     },
 }
 </script>
-

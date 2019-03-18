@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<div class="wrapper">
-			<scroller class="main-scroller" offset-accuracy="300px">
+		<scroller class="main-scroller wrapper" offset-accuracy="300px">
+			<div class="wrapper">
 				<text class="i-phone">请输入手机号</text>
 				<wxc-cell
 					title="+86"
@@ -29,8 +29,8 @@
 					class="btnBox"
 					@wxcButtonClicked="emit"
 				></wxc-button>
-			</scroller>
-		</div>
+			</div>
+		</scroller>
 	</div>
 </template>
 <script>

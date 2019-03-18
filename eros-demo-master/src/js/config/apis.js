@@ -1,16 +1,25 @@
 export default {
+    // 短信验证码登录
     'AUTH.loginBySms': '/login/message',
+    // 密码登录
+    'AUTH.loginByPwd': '/login/pwd',
     // 推荐
-    'DISCOVERY.queryShare': '/api/newsshare/top',
-    'DISCOVERY.queryNews': '/api/news/query',
-    'DISCOVERY.queryDynamic': '/api/share/query',
-    'DISCOVERY.pushDynamic': '/api/share/push',
+    'DISCOVERY.queryShare': '/news/newsshare/top',
+    // 资讯
+    'DISCOVERY.queryNews': '/news/news/query',
+    // 动态
+    'DISCOVERY.queryDynamic': '/news/share/query',
+    // 发布动态
+    'DISCOVERY.pushDynamic': '/news/share/push',
     'uploadImage': '/api/file/upload',
-    'DISCOVERY.queryComment': '/api/comment/query',
-    'DISCOVERY.sendComment': '/api/comment/add',
-
-    'DISCOVERY.addlikes': '/api/newsshare/addlikes',
-    'DISCOVERY.removeLikes': '/api/newsshare/removeLikes',
-
-    'DISCOVERY.browse': '/api/news/browse',
+    // 查询评论
+    'DISCOVERY.queryComment': '/news/comment/query',
+    // 发布评论
+    'DISCOVERY.sendComment': '/news/comment/add',
+    // 点赞
+    'DISCOVERY.addlikes': '/news/newsshare/addlikes',
+    // 取消点赞
+    'DISCOVERY.removeLikes': '/news/newsshare/removeLikes',
+    // 添加浏览数
+    'DISCOVERY.browse': '/news/news/browse',
 }

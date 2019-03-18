@@ -8,13 +8,13 @@
             </div>
             <image style="width:68px;height:68px;margin-right:18px;margin-left:100px;" src="bmlocal://assets/add_icon.png" @click="onClickPushDynamic"></image>
         </div>
-        <div style="height:2px;background-color:#212531;flex-direction:">
+        <div style="height:2px;background-color:#212531;flex-direction:column;">
             <!-- <div class="slideBlock" v-f v-for="(text,index) in topTabs" :key="index"></div> -->
         </div>
         <slider class="container" infinite="false" :index="curIndex" @change="changePage">
-            <d-news :discoverData="discoverData0" :token="token" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="0"></d-news>
-            <d-news :discoverData="discoverData1" :token="token" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="1"></d-news>
-            <d-news :discoverData="discoverData2" :token="token" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="2"></d-news>
+            <d-news :discoverData="discoverData0" :loginInfo="loginInfo" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="0"></d-news>
+            <d-news :discoverData="discoverData1" :loginInfo="loginInfo" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="1"></d-news>
+            <d-news :discoverData="discoverData2" :loginInfo="loginInfo" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="2"></d-news>
         </slider>
 
    </div>
@@ -50,17 +50,16 @@ import dNews from './news.vue'
 import paramDao from '../paramDao'
 const modal = weex.requireModule('modal')
 export default {
-    props:['token'],
+    props:['loginInfo'],
     created(){
         // 注册请求方法
         this.$event.on('discoveryQ',params=>{
             if(params.isRefresh===1){
                 this.discoverDateParams[params.index].start=0
             }
-            this.discoveryQuery(this.token,this.getDiscoveryParams(params.index,params.isRefresh))
+            this.discoveryQuery(this.loginInfo,this.getDiscoveryParams(params.index,params.isRefresh))
         })
-        // 初始化推荐页
-        this.$event.emit('discoveryQ',{index:0,isRefresh:0})
+       
     },
     components:{
         'd-news':dNews,
@@ -72,7 +71,7 @@ export default {
            this.$router.open({
                 name:'pushDynamic',
                 type:'push',
-                params:this.token
+                params:this.loginInfo
             })
           
        },
@@ -110,19 +109,20 @@ export default {
              this.$event.emit('discoveryQ',{index:event.index,isRefresh:0})
         },
         // 获取资讯
-       discoveryQuery(token,params){
+       discoveryQuery(loginInfo,params){
           var paramMap=new Map()
+          paramMap.set('userId',loginInfo.data.userInfo.userId)
           paramMap.set('pageNum',params.pageNum)
           paramMap.set('start',params.start)
           this.$fetch({
               method: 'POST',    // 大写
               name: params.fetchName, //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
-              data: paramDao.getParamsJSON(paramMap),
+              data: paramDao.getParamsForm(paramMap),
               header:{
-                'token':token
+                'Authorization':'Bearer  '+loginInfo.data.token.access_token
               }
           }).then(resData => {
-              
+              console.log(resData)
               if(params.isRefresh===1){
                   this.isRefreshShow=false
                   setTimeout(handler=>{
@@ -138,30 +138,40 @@ export default {
              
               if(params.isRefresh===2){
                     if(params.index===0){
-                        this.discoverData0.push.apply(this.discoverData0,resData.data)
+                        this.discoverData0.push.apply(this.discoverData0,resData.data.context)
                     }else if(params.index===1){
-                        this.discoverData1.push.apply(this.discoverData1,resData.data)
+                        this.discoverData1.push.apply(this.discoverData1,resData.data.context)
                     }else if(params.index===2){
-                        this.discoverData2.push.apply(this.discoverData2,resData.data)
+                        this.discoverData2.push.apply(this.discoverData2,resData.data.context)
                     }
               }else{
                     if(params.index===0){
                         if(params.isRefresh===1||this.discoverData0==null)
-                        this.discoverData0=resData.data
+                        this.discoverData0=resData.data.context
                     }else if(params.index===1){
                         if(params.isRefresh===1||this.discoverData1==null)
-                        this.discoverData1=resData.data
+                        this.discoverData1=resData.data.context
                     }else if(params.index===2){
                         if(params.isRefresh===1||this.discoverData2==null)
-                        this.discoverData2=resData.data
+                        this.discoverData2=resData.data.context
                     }
               }
+            
             if(params.index===0){
                 this.discoverDateParams[params.index].start=this.discoverData0.length
+            //      this.$notice.toast({
+            //         message:this.discoverData0
+            //    })
             }else if(params.index===1){
                 this.discoverDateParams[params.index].start=this.discoverData1.length
+            //      this.$notice.toast({
+            //         message:this.discoverData1
+            //    })
             }else if(params.index===2){
                 this.discoverDateParams[params.index].start=this.discoverData2.length
+            //      this.$notice.toast({
+            //         message:this.discoverData2
+            //    })
             }
             // this.$notice.toast('start===='+this.discoverDateParams[params.index].start)
           }, error => {

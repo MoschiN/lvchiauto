@@ -1,14 +1,14 @@
 <template>
     <div class="wrapper">
-        <scroller class="main-scroller" offset-accuracy="300px">
+        <scroller class="main-scroller wrapper" offset-accuracy="300px">
             <image class="backIg"
-                   src="bmlocal://assets/back_icon@2x.png"
+                   src="bmlocal://assets/back_icon.png"
                    style="text-align: center"
                     @click="back"
             ></image>
 
             <text class="i-sms">请输入短信验证码</text>
-            <div style="flex-direction: row">
+            <div style="flex-direction: row;background-color:blue;">
                 <input type="number" placeholder=""
                            class="textField" :autofocus="true"
                            v-model="eventOne" maxlength="1"/>

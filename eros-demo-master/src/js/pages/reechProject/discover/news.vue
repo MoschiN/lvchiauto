@@ -11,12 +11,12 @@
     </refresh>
     <cell v-for="(item,index) in discoverData" :key="index" @click="onclickitem(item,index,false)">
         <div style="flex-direction:colum;align-items:center;margin-top:44px;">
-          <image style="margin-right:24px;width:64px;height:64px;border-radius:32px;" v-if="'news'!=item.isNews" :src="item.pushUserHeadPortraitUrl===''?'bmlocal://assets/upload_head_icon.png':item.pushUserHeadPortraitUrl"></image>
+          <image style="margin-right:24px;width:64px;height:64px;border-radius:32px;" v-if="'news'!=item.isNews" :src="typeof item.pushUserHeadPortraitUrl==='undefined' ||item.pushUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':item.pushUserHeadPortraitUrl"></image>
           <text class="d-title">{{'news'==item.isNews?item.title:item.pushUserNick}}</text>
           <image style="width:44px;height:44px;margin-left:24px;" v-if="'news'!=item.isNews" src="bmlocal://assets/follow.png"></image>
         </div>
         <text style="size:28px;color:white;margin-top:24px;" v-if="'news'!=item.isNews">{{item.title}}</text>
-        <image v-if="item.imagesUrl!==''" class="d-image" resize="cover" :src="item.imagesUrl.split(',')[0]"></image>
+        <image v-if="typeof item.imagesUrl!=='undefined'" class="d-image" resize="cover" :src="item.imagesUrl==null?'':item.imagesUrl.split(',')[0]"></image>
         <div class="layout-h">
             <text class="d-state-text" style="flex:1;">{{item.createTime}}</text>
             <image style="width:44px;height:44px;" src="bmlocal://assets/review_icon.png" @click="onclickitem(item,index,true)"/>
@@ -44,7 +44,7 @@
 var modal = weex.requireModule("modal")
 import paramDao from '../paramDao'
 export default {
-  props:['discoverData','token','isRefreshShow','isLoadingShow','index'],
+  props:['discoverData','loginInfo','isRefreshShow','isLoadingShow','index'],
   created(){
       // 添加喜欢
       this.$event.on('onlike_'+this.index,itemData=>{
@@ -53,12 +53,10 @@ export default {
       // 添加浏览数
        this.$event.on('addBrowser_'+this.index,itemData=>{
          this.discoverData[itemData.position].browseNum++
-         this.$notice.toast('浏览数_'+itemData.position+'_:'+this.discoverData[itemData.position].browseNum)
       })
        // 添加评论数
        this.$event.on('addComment_'+this.index,itemData=>{
          this.discoverData[itemData.position].commentNum++
-         this.$notice.toast('评论数_'+itemData.position+'_:'+this.discoverData[itemData.position].commentNum)
       })
   },
   components:{
@@ -75,22 +73,19 @@ export default {
   },
  
   methods: {
-    onTest(){
-      this.test=!this.test
-      this.$notice.toast('回调===='+this.test)
-    },
     //  动态的点赞和取消点赞
     onlike(itemData,index){
           
           
           var paramMap=new Map()
           paramMap.set('newsShareId',itemData.id)
+          paramMap.set('userId',this.loginInfo.data.userInfo.userId)
           this.$fetch({
               method: 'POST',    // 大写
               name: !itemData.hasLike?'DISCOVERY.addlikes':'DISCOVERY.removeLikes', //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
-              data: paramDao.getParamsJSON(paramMap),
+              data: paramDao.getParamsForm(paramMap),
               header:{
-                'token':this.token
+                'Authorization':'Bearer  '+this.loginInfo.data.token.access_token
               }
           }).then(resData => {
             if(resData.code===1000){
@@ -138,7 +133,7 @@ export default {
         type:'PUSH',
         params:{
           data:item,
-          token:this.token,
+          loginInfo:this.loginInfo,
           toReviewArea:toReviewArea,
           index:this.index
         }

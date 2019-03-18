@@ -25,9 +25,19 @@ new Widget({
          * next
          */
         requestHandler(options, next) {
+            if (options.method == 'POST') {
+                // options.data = stringify(options.data)
+                if (typeof options.header !== 'undefined') {
+                    options.header['Content-Type'] = 'application/x-www-form-urlencoded'
+
+                } else {
+                    options.header = { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }
+            }
             console.log('request-opts', options)
             next()
         },
+
         /**
          * 请求返回统一拦截器 （可选）
          * options 你请求传入的所有参数和配置
@@ -45,6 +55,8 @@ new Widget({
                 // 自定义请求逻辑
                 resolve(data)
             }
-        }
+        },
+
+
     }
 })

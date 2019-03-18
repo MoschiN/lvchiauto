@@ -28,7 +28,7 @@
             <div v-for="(commentItem,index) in commentDatas" :key="index">
                 <div style="flex-direction:row;align-items:center;justify-content:space-between;margin-top:32px;">
                     <div style="flex-direction:row;align-items:center;">
-                        <image style="width:64px;height:64px;border-radius:32px;" :src="commentItem.commentUserHeadPortraitUrl===''?'bmlocal://assets/upload_head_icon.png':commentItem.commentUserHeadPortraitUrl"></image>
+                        <image style="width:64px;height:64px;border-radius:32px;" :src="typeof commentItem.commentUserHeadPortraitUrl==='undefined'||commentItem.commentUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':commentItem.commentUserHeadPortraitUrl"></image>
                         <text style="margin-left:24px;size:28px;color:#DDE2EC;">{{commentItem.commentUserNickName}}</text>
                     </div>
                     <div v-if="false" style="flex-direction:row;align-items:center;">
@@ -52,7 +52,7 @@
         </div>
        <div v-if="isEdit"  ref="input" class="overlayer" @click="onCancelEdit">
            <div :style="{padding:36,position:'fixed',bottom:keyboardHeight,backgroundColor:'#272C39'}">
-                <textarea type="text" class="inputarea" autofocus="true" return-key-type="send" @return="sendComment" upriseOffset=36 @keyboard="onKeyboard"></textarea>
+                <textarea type="text" class="inputarea" autofocus="true" return-key-type="send" @return="onsendComment" upriseOffset=36 @keyboard="onKeyboard"></textarea>
            </div>
        </div>
         </div>
@@ -94,7 +94,7 @@ import Utils from '../utils'
 import paramDao from '../paramDao'
 export default {
     created(){
-        
+       
         this.$event.on(this.onBackTag,params=>{
             if(this.isEdit){
                 this.onCancelEdit()
@@ -109,29 +109,35 @@ export default {
             this.hasLike=resData.data.hasLike
             this.likeNum=resData.data.likeNum
             this.curIndex=resData.index
-            var arrays=this.discoverDataItem.imagesUrl.split(',')
+             
+            if(typeof this.discoverDataItem.imagesUrl!=='undefined'){
+                var arrays=this.discoverDataItem.imagesUrl.split(',')
+                
+                while(arrays.length>=1&&(arrays[arrays.length-1]===''||arrays[arrays.length-1]==null)){
+                    arrays.pop()
+                }
             
-            while(arrays.length>=1&&(arrays[arrays.length-1]===''||arrays[arrays.length-1]==null)){
-                arrays.pop()
+                var imgParam=new Map()
+                imgParam.set('width',678)
+                imgParam.set('height',308)
+                var myJsonString = Utils.arrayToJson(arrays,imgParam)
+                
+                this.imageUrls=myJsonString
             }
            
-            var imgParam=new Map()
-            imgParam.set('width',678)
-            imgParam.set('height',308)
-            var myJsonString = Utils.arrayToJson(arrays,imgParam)
-            
-            this.imageUrls=myJsonString
             this.id=resData.data.id
-            this.token=resData.token
+            this.loginInfo=resData.loginInfo
             // 如果是资讯添加浏览数
             if(this.isNews){
-                // this.addBrowserNum()
+                this.addBrowserNum()
             }
+             
              this.$event.on('onLikeInfoChange',params=>{
                     this.discoverDataItem.hasLike=params.hasLike
                     this.discoverDataItem.likeNum=params.likeNum
                 })
             this.getCommentList(resData.toReviewArea)
+            
         })
         
     },
@@ -146,9 +152,9 @@ export default {
             this.$fetch({
                 method: 'POST',    // 大写
                 name: 'DISCOVERY.browse', //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
-                data: paramDao.getParamsJSON(paramMap),
+                data: paramDao.getParamsForm(paramMap),
                 header:{
-                    'token':this.token
+                    'Authorization':'Bearer  '+this.loginInfo.data.token.access_token
                 }
             }).then(resData => {
               if(resData.code===1000){
@@ -163,7 +169,7 @@ export default {
               console.log(error)
           })
         },
-        sendComment(event){
+        onsendComment(event){
             if(event.returnKeyType==='send'){
                 this.sendComment(event)
             }
@@ -203,13 +209,13 @@ export default {
           this.$fetch({
               method: 'POST',    // 大写
               name: 'DISCOVERY.queryComment', //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
-              data: paramDao.getParamsJSON(paramMap),
+              data: paramDao.getParamsForm(paramMap),
               header:{
-                'token':this.token
+                'Authorization':'Bearer  '+this.loginInfo.data.token.access_token
               }
           }).then(resData => {
              
-              this.commentDatas=resData.data
+              this.commentDatas=resData.data.context
               if(toReviewPosition){
                   this.onCancelEdit()
                   setTimeout(() => {
@@ -231,12 +237,13 @@ export default {
             var paramMap=new Map()
           paramMap.set('newsShareId',this.id)
           paramMap.set('commentContext',encodeURI(commentContext))
+          paramMap.set('userId',this.loginInfo.data.userInfo.userId)
           this.$fetch({
               method: 'POST',    // 大写
               name: 'DISCOVERY.sendComment', //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
-              data: paramDao.getParamsJSON(paramMap),
-              header:{
-                'token':this.token
+              data: paramDao.getParamsForm(paramMap),
+             header:{
+                'Authorization':'Bearer  '+this.loginInfo.data.token.access_token
               }
           }).then(resData => {
               this.discoverDataItem.commentNum++
@@ -283,7 +290,7 @@ export default {
             curIndex:-1,
             isNews:false,
             id:'',
-            token:'',
+            loginInfo:null,
             onBackTag:'onDetailBack',
             keyboardHeight:0,
             isEdit:false,

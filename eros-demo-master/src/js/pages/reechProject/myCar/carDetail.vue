@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <image class="i-imgB" src="bmlocal://assets/cars/page1@2x.png" style="text-align: center" ></image>
+            <image class="i-imgB" src="bmlocal://assets/cars/page1@2x.png" style="text-align: center" ></image>
         <image class="i-imgB" src="bmlocal://assets/cars/page2@2x.png" style="text-align: center" ></image>
         <image class="i-imgB" src="bmlocal://assets/cars/page3@2x.png" style="text-align: center" ></image>
         <image class="i-imgB" src="bmlocal://assets/cars/page4@2x.png" style="text-align: center" ></image>
