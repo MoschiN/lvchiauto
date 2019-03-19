@@ -109,7 +109,7 @@ export default {
               // url:'http://10.120.8.187:7766/login/pwd',
               name: 'AUTH.loginByPwd', //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
               // data: 'username=18240349328&password=123456',
-              data: paramDao.getParamsForm(paramMap),
+              data: paramDao.getParamsJSON(paramMap),
               // header:{
               //   'Content-Type':'application/x-www-form-urlencoded'
               // }
@@ -121,7 +121,7 @@ export default {
               //     // "scope":"abc aab",
               //     // "token_type":"bearer",
               //     // "expires_in":6371}
-              //     message:resData.data.token
+              //     message:resData
               // })
               this.loginInfo=resData
               // 将登陆信息持久化保存到本地,供各个界面使用.

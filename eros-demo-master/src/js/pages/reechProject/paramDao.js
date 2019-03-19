@@ -1,7 +1,6 @@
 
 export default {
     getParamsJSON,
-    getParamsForm,
     isEmpty,
 }
 function get() {
@@ -37,7 +36,9 @@ function getParamsForm(paramMap) {
     // 拼接
     var formText = ''
     for (const key in keysArray) {
-        formText += '&' + keysArray[key] + '=' + paramMap.get(keysArray[key])
+        var keyStr = keysArray[key]
+        var valueStr = paramMap.get(keysArray[key])
+        formText += '&' + keyStr + '=' + valueStr
     }
     return formText.substring(1)
 }
