@@ -117,7 +117,7 @@ export default {
           this.$fetch({
               method: 'POST',    // 大写
               name: params.fetchName, //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
-              data: paramDao.getParamsForm(paramMap),
+              data: paramDao.getParamsJSON(paramMap),
               header:{
                 'Authorization':'Bearer  '+loginInfo.data.token.access_token
               }

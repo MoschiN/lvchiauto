@@ -25,13 +25,14 @@ new Widget({
          * next
          */
         requestHandler(options, next) {
-            if (options.method == 'POST') {
+            if (options.method === 'POST') {
+                console.log('request-参数Content-Type')
                 // options.data = stringify(options.data)
                 if (typeof options.header !== 'undefined') {
-                    options.header['Content-Type'] = 'application/x-www-form-urlencoded'
+                    options.header['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
 
                 } else {
-                    options.header = { 'Content-Type': 'application/x-www-form-urlencoded' }
+                    options.header = { 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8' }
                 }
             }
             console.log('request-opts', options)

@@ -6,7 +6,7 @@
         <scroller class="content" show-scrollbar="false" >
             <div v-if="!isNews" style="width:auto;height:64px;flex-direction:colum;justify-content:space-between;align-items:center;margin-top:34px;">
                 <div style="flex-direction:colum;"> 
-                    <image style="width:64px;height:64px;margin-right:26px;border-radius:32px;" :src="discoverDataItem.pushUserHeadPortraitUrl===''?'bmlocal://assets/upload_head_icon.png':discoverDataItem.pushUserHeadPortraitUrl"></image>
+                    <image style="width:64px;height:64px;margin-right:26px;border-radius:32px;" :src="typeof discoverDataItem.pushUserHeadPortraitUrl==='undefined'||discoverDataItem.pushUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':discoverDataItem.pushUserHeadPortraitUrl"></image>
                     <div>
                         <text style="color:white;size:28px;">{{discoverDataItem.pushUserNick}}</text>
                         <text style="color:#9BA3B2;size:22px;">{{discoverDataItem.createTime}}</text>
@@ -152,7 +152,7 @@ export default {
             this.$fetch({
                 method: 'POST',    // 大写
                 name: 'DISCOVERY.browse', //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
-                data: paramDao.getParamsForm(paramMap),
+                data: paramDao.getParamsJSON(paramMap),
                 header:{
                     'Authorization':'Bearer  '+this.loginInfo.data.token.access_token
                 }
@@ -209,7 +209,7 @@ export default {
           this.$fetch({
               method: 'POST',    // 大写
               name: 'DISCOVERY.queryComment', //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
-              data: paramDao.getParamsForm(paramMap),
+              data: paramDao.getParamsJSON(paramMap),
               header:{
                 'Authorization':'Bearer  '+this.loginInfo.data.token.access_token
               }
@@ -241,7 +241,7 @@ export default {
           this.$fetch({
               method: 'POST',    // 大写
               name: 'DISCOVERY.sendComment', //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
-              data: paramDao.getParamsForm(paramMap),
+              data: paramDao.getParamsJSON(paramMap),
              header:{
                 'Authorization':'Bearer  '+this.loginInfo.data.token.access_token
               }
