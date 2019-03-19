@@ -11,6 +11,7 @@
   "dependencies": {
     "bui-weex": "^0.2.5",
     "eros-widget": "^1.0.2-beta.2",
+    "puppeteer": "^1.13.0",
     "weex-ui": "^0.6.0beta-2",
     "weex-vue-render": "^1.0.36"
   },
