@@ -94,7 +94,7 @@ import Utils from '../utils'
 import paramDao from '../paramDao'
 export default {
     created(){
-       
+        this.loginInfo=this.$storage.getSync('loginInfo')
         this.$event.on(this.onBackTag,params=>{
             if(this.isEdit){
                 this.onCancelEdit()
@@ -126,7 +126,6 @@ export default {
             }
            
             this.id=resData.data.id
-            this.loginInfo=resData.loginInfo
             // 如果是资讯添加浏览数
             if(this.isNews){
                 this.addBrowserNum()

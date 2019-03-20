@@ -9,7 +9,7 @@
         </div>
       </div>
     </refresh>
-    <cell v-for="(item,index) in discoverData" :key="index" @click="onclickitem(item,index,false)">
+    <cell v-for="(item,index) in discoverData" :key="index" :ref="'cell_'+index" @click="onclickitem(item,index,false)">
         <div style="flex-direction:colum;align-items:center;margin-top:44px;">
           <image style="margin-right:24px;width:64px;height:64px;border-radius:32px;" v-if="'news'!=item.isNews" :src="typeof item.pushUserHeadPortraitUrl==='undefined' ||item.pushUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':item.pushUserHeadPortraitUrl"></image>
           <text class="d-title">{{'news'==item.isNews?item.title:item.pushUserNick}}</text>
@@ -42,10 +42,12 @@
 
 <script>
 var modal = weex.requireModule("modal")
+var dom = weex.requireModule('dom')
 import paramDao from '../paramDao'
 export default {
-  props:['discoverData','loginInfo','isRefreshShow','isLoadingShow','index'],
+  props:['discoverData','isRefreshShow','isLoadingShow','index'],
   created(){
+    this.loginInfo=this.$storage.getSync('loginInfo')
       // 添加喜欢
       this.$event.on('onlike_'+this.index,itemData=>{
         this.onlike(itemData,-1)
@@ -58,12 +60,17 @@ export default {
        this.$event.on('addComment_'+this.index,itemData=>{
          this.discoverData[itemData.position].commentNum++
       })
+      // 判断是否滚动到第一项
+      this.$event.on('scrollToFirst_'+this.index,itemData=>{
+        dom.scrollToElement(this.$refs.cell_0[0], {})
+      })
   },
   components:{
   },
   data() {
     return {
       test:false,
+      loginInfo:null,
       refreshStateStr:'下拉刷新',
       lastRefreshTime:'最后更新：今天 13：57',
       loadingStateStr:'上拉加载',
@@ -133,7 +140,6 @@ export default {
         type:'PUSH',
         params:{
           data:item,
-          loginInfo:this.loginInfo,
           toReviewArea:toReviewArea,
           index:this.index
         }

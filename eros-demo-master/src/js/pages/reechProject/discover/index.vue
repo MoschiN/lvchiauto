@@ -12,9 +12,9 @@
             <!-- <div class="slideBlock" v-f v-for="(text,index) in topTabs" :key="index"></div> -->
         </div>
         <slider class="container" infinite="false" :index="curIndex" @change="changePage">
-            <d-news :discoverData="discoverData0" :loginInfo="loginInfo" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="0"></d-news>
-            <d-news :discoverData="discoverData1" :loginInfo="loginInfo" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="1"></d-news>
-            <d-news :discoverData="discoverData2" :loginInfo="loginInfo" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="2"></d-news>
+            <d-news :discoverData="discoverData0" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="0"></d-news>
+            <d-news :discoverData="discoverData1" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="1"></d-news>
+            <d-news :discoverData="discoverData2" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="2"></d-news>
         </slider>
 
    </div>
@@ -41,25 +41,31 @@
     .container{
         background-color: #272C39;
         flex-direction: column;
-        height: 1020px;
-        width: 750px;
+        flex: 1;
     }
 </style>
 <script>
 import dNews from './news.vue'
 import paramDao from '../paramDao'
 const modal = weex.requireModule('modal')
+const dom = weex.requireModule('dom')
 export default {
-    props:['loginInfo'],
     created(){
+        this.loginInfo=this.$storage.getSync('loginInfo')
         // 注册请求方法
         this.$event.on('discoveryQ',params=>{
+            // 如果不在当前标签则切换
+            if(params.index!==this.curIndex){
+                this.curIndex=params.index
+            }
             if(params.isRefresh===1){
                 this.discoverDateParams[params.index].start=0
             }
-            this.discoveryQuery(this.loginInfo,this.getDiscoveryParams(params.index,params.isRefresh))
+            this.discoveryQuery(this.getDiscoveryParams(params.index,params.isRefresh))
         })
-       
+        
+        // 初始化推荐页
+        this.$event.emit('discoveryQ',{index:0,isRefresh:0})
     },
     components:{
         'd-news':dNews,
@@ -71,7 +77,6 @@ export default {
            this.$router.open({
                 name:'pushDynamic',
                 type:'push',
-                params:this.loginInfo
             })
           
        },
@@ -109,9 +114,9 @@ export default {
              this.$event.emit('discoveryQ',{index:event.index,isRefresh:0})
         },
         // 获取资讯
-       discoveryQuery(loginInfo,params){
+       discoveryQuery(params){
           var paramMap=new Map()
-          paramMap.set('userId',loginInfo.data.userInfo.userId)
+          paramMap.set('userId',this.loginInfo.data.userInfo.userId)
           paramMap.set('pageNum',params.pageNum)
           paramMap.set('start',params.start)
           this.$fetch({
@@ -119,7 +124,7 @@ export default {
               name: params.fetchName, //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
               data: paramDao.getParamsJSON(paramMap),
               header:{
-                'Authorization':'Bearer  '+loginInfo.data.token.access_token
+                'Authorization':'Bearer  '+this.loginInfo.data.token.access_token
               }
           }).then(resData => {
               console.log(resData)
@@ -155,6 +160,9 @@ export default {
                         if(params.isRefresh===1||this.discoverData2==null)
                         this.discoverData2=resData.data.context
                     }
+                    if(params.isRefresh===1){
+                        this.$event.emit('scrollToFirst_'+params.index)
+                    }
               }
             
             if(params.index===0){
@@ -185,6 +193,7 @@ export default {
     },
     data(){
         return{
+            loginInfo:null,
             isLoadingShow:true,
             isRefreshShow:true,
             discoverData0:null,

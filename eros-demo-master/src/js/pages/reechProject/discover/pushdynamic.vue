@@ -17,9 +17,10 @@
 import textTabBar from '../nav/textnavbar'
 import paramDao from '../paramDao'
 export default {
+    props:['needRefresh'],
     created(){
         this.$router.getParams().then(resData => {
-            this.token=resData
+            this.needRefresh=resData.needRefresh
         })
         // 发布按钮
         this.$event.on(this.onRightTag, params => {
@@ -38,10 +39,12 @@ export default {
               }
           }).then(resData => {
               if(resData.code===1000){
+                  this.$event.emit('discoveryQ',{index:2,isRefresh:1})
                   this.$router.back()
-                  this.$notice.toast({
+                  
+                 this.$notice.toast({
                         message:'发布成功!'
-                    })
+                })
               }else{
               }
              
@@ -130,6 +133,7 @@ export default {
     },
     data(){
         return{
+            needRefresh:false,
             token:'',
             context:'',
             imgs:null,
