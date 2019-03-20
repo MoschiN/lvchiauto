@@ -12,9 +12,9 @@
             <!-- <div class="slideBlock" v-f v-for="(text,index) in topTabs" :key="index"></div> -->
         </div>
         <slider class="container" infinite="false" :index="curIndex" @change="changePage">
-            <d-news :discoverData="discoverData0" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="0"></d-news>
-            <d-news :discoverData="discoverData1" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="1"></d-news>
-            <d-news :discoverData="discoverData2" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="2"></d-news>
+            <d-news :discoverData="discoverData0" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="0" style="width:auto;"></d-news>
+            <d-news :discoverData="discoverData1" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="1" style="width:auto;"></d-news>
+            <d-news :discoverData="discoverData2" :isLoadingShow="isLoadingShow" :isRefreshShow="isRefreshShow" :index="2" style="width:auto;"></d-news>
         </slider>
 
    </div>
@@ -41,6 +41,7 @@
     .container{
         background-color: #272C39;
         flex-direction: column;
+        width:auto;
         flex: 1;
     }
 </style>
