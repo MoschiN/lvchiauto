@@ -188,6 +188,17 @@ export default {
               this.$notice.toast({
                 message:error
               })
+               if(params.isRefresh===1){
+                  this.isRefreshShow=false
+                  setTimeout(handler=>{
+                    this.isRefreshShow=true
+                },500)
+              }else if(params.isRefresh===2){
+                  this.isLoadingShow=false
+                  setTimeout(handler=>{
+                    this.isLoadingShow=true
+                },500)
+              }
               console.log(error)
           })
        }

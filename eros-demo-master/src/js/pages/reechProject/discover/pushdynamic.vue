@@ -100,7 +100,7 @@ export default {
         },
         getImageUrlsParams(){
             var uParam=''
-            for(var i=0;i<this.imgs.length-1;i++){
+            for(var i=0;i<this.imgs.length;i++){
                 uParam+=this.imgs[i].path+','
             }
             return uParam
