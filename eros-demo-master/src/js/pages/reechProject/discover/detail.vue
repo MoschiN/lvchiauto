@@ -4,9 +4,9 @@
         <div style="background-color:#272C39;flex:1;">
         <navbar :onBackTag="onBackTag"></navbar>
         <scroller class="content" show-scrollbar="false" >
-            <div v-if="!isNews" style="width:auto;height:64px;flex-direction:colum;justify-content:space-between;align-items:center;margin-top:34px;">
+            <div v-if="!isNews" style="width:auto;height:auto;flex-direction:colum;justify-content:space-between;align-items:center;margin-top:34px;">
                 <div style="flex-direction:colum;"> 
-                    <image style="width:64px;height:64px;margin-right:26px;border-radius:32px;" :src="typeof discoverDataItem.pushUserHeadPortraitUrl==='undefined'||discoverDataItem.pushUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':discoverDataItem.pushUserHeadPortraitUrl"></image>
+                    <image style="width:64px;height:64px;margin-right:26px;border-radius:32px;" cover="" :src="typeof discoverDataItem.pushUserHeadPortraitUrl==='undefined'||discoverDataItem.pushUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':discoverDataItem.pushUserHeadPortraitUrl"></image>
                     <div>
                         <text style="color:white;size:28px;">{{discoverDataItem.pushUserNick}}</text>
                         <text style="color:#9BA3B2;size:22px;">{{discoverDataItem.createTime}}</text>
