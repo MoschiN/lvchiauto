@@ -6,7 +6,7 @@
         <scroller class="content" show-scrollbar="false" >
             <div v-if="!isNews" style="width:auto;height:auto;flex-direction:colum;justify-content:space-between;align-items:center;margin-top:34px;">
                 <div style="flex-direction:colum;"> 
-                    <image style="width:64px;height:64px;margin-right:26px;border-radius:32px;" :src="typeof discoverDataItem.pushUserHeadPortraitUrl==='undefined'||discoverDataItem.pushUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':discoverDataItem.pushUserHeadPortraitUrl"></image>
+                    <image style="background-color:#323845;width:64px;height:64px;margin-right:26px;border-radius:32px;" :src="typeof discoverDataItem.pushUserHeadPortraitUrl==='undefined'||discoverDataItem.pushUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':discoverDataItem.pushUserHeadPortraitUrl"></image>
                     <div>
                         <text style="color:white;size:28px;">{{discoverDataItem.pushUserNick}}</text>
                         <text style="color:#9BA3B2;size:22px;">{{discoverDataItem.createTime}}</text>
@@ -15,7 +15,7 @@
                 <image style="width:33px;height:34px;" src="bmlocal://assets/follow.png"></image>
             </div>
             <text style="margin-top:40px;size:28px;color:#DDE2EC;"> {{discoverDataItem.isNews=='news'?discoverDataItem.context:discoverDataItem.title}}</text>
-            <image v-for="(img,i) in imageUrls" :key="i" :src="img.value" :style="{width:img.width,height:img.height,marginTop:40,marginBottom:0}" @load="onImageLoad(img,$event)"></image>
+            <image v-for="(img,i) in imageUrls" :key="i" :src="img.value" :style="{backgroundColor:'#323845',width:img.width,height:img.height,marginTop:40,marginBottom:0}" @load="onImageLoad(img,$event)"></image>
             <div style="flex-direction:colum;margin-top:37px;justify-content:flex-end;align-items:center;">
                 <image v-if="isNews" style="width:34px;height:21px;" src="bmlocal://assets/browse_num.png"></image>
                 <text v-if="isNews" style="size:26px;color:#9BA3B2;margin-left:8px;">{{discoverDataItem.browseNum}}</text>
@@ -28,7 +28,7 @@
             <div v-for="(commentItem,index) in commentDatas" :key="index">
                 <div style="flex-direction:row;align-items:center;justify-content:space-between;margin-top:32px;">
                     <div style="flex-direction:row;align-items:center;">
-                        <image style="width:64px;height:64px;border-radius:32px;" :src="typeof commentItem.commentUserHeadPortraitUrl==='undefined'||commentItem.commentUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':commentItem.commentUserHeadPortraitUrl"></image>
+                        <image style="background-color:#323845;width:64px;height:64px;border-radius:32px;" :src="typeof commentItem.commentUserHeadPortraitUrl==='undefined'||commentItem.commentUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':commentItem.commentUserHeadPortraitUrl"></image>
                         <text style="margin-left:24px;size:28px;color:#DDE2EC;">{{commentItem.commentUserNickName}}</text>
                     </div>
                     <div v-if="false" style="flex-direction:row;align-items:center;">

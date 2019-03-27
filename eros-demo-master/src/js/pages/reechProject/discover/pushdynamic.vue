@@ -6,7 +6,7 @@
             <textarea type="text" v-model="context" placeholder="分享美好瞬间…" style="height:200px;lines:5;margin-top:49px;placeholder-color:#9BA3B2;color:white;size:28px;margin-left:36px;margin-right:36px;"/>
             <div style="flex-direction:colum;flex-wrap:wrap;margin-top:49px;margin-left:36px;">
                 <div v-for="(img,i) in imgs" :key="i" style="width:172px;flex-direction:colum;padding-top:22px;">
-                    <image style="width:150px;height:150px;padding:1px;" :src="img===''?'bmlocal://assets/add_image.png':img.path" @click="onAdd(img==='')"></image>
+                    <image style="width:150px;height:150px;padding:1px;" resize="cover" :src="img===''?'bmlocal://assets/add_image.png':img.path" @click="onAdd(img==='')"></image>
                     <image v-if="img!==''" style="width:44px;height:44px;position:relative;top:-22px;right:22px;" src="bmlocal://assets/delete_image.png" @click="onDelImg(i)"></image>
                 </div>
             </div>
@@ -57,14 +57,6 @@ export default {
               console.log(error)
           })
         });
-        this.imgs=new Array(0);
-        for(var i=0;i<this.imgs.length;i++){
-            
-            this.imgs[i]={}
-            this.imgs[i]['path']='https://reechauto-file.oss-cn-beijing.aliyuncs.com/data20190124/801b215cb05f45b9b7715973e24f162f.jpg?Expires=2179018315&OSSAccessKeyId=LTAI4neWcL5za1ri&Signature=g7OqkfklTN6T72CqzK2WxjdGGRg%3D'
-          
-        }
-        this.imgs.push('')
     },
     components:{
         textTabBar,
@@ -93,14 +85,23 @@ export default {
                         this.addImage(resData[i].data.context)
                     }
                 }
+                if(resData.length===0){
+                    this.$notice.toast({
+                        message:"图片上传失败!"
+                    })
+                }
                 console.log(resData)    // [url1, url2...]
             }, error => {
+                this.$notice.toast({
+                    message:error
+                })
                 console.log(error)
             })
         },
         getImageUrlsParams(){
             var uParam=''
             for(var i=0;i<this.imgs.length;i++){
+                if(this.imgs[i]!=='')
                 uParam+=this.imgs[i].path+','
             }
             return uParam
@@ -136,7 +137,7 @@ export default {
             needRefresh:false,
             token:'',
             context:'',
-            imgs:null,
+            imgs:[''],
             onRightTag:'onPushDynamic'
         }
     },

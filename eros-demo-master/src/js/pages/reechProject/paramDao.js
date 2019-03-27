@@ -43,8 +43,8 @@ function getParamsForm(paramMap) {
     return formText.substring(1)
 }
 
-function isEmpty(param) {
-    if (typeof (param) == 'undefined' || param == 'undefined' || param == 'null' || param == 'NULL' || param == 'Null' || param == '' || param == null)
+function isEmpty(base, param) {
+    if (!base.hasOwnProperty(param) || param == 'undefined' || param == 'null' || param == 'NULL' || param == 'Null' || param == '' || param == null)
         return true
     else
         return false

@@ -11,24 +11,24 @@
     </refresh>
     <cell v-for="(item,index) in discoverData" :key="index" :ref="'cell_'+index" @click="onclickitem(item,index,false)">
         <div style="flex-direction:colum;align-items:center;margin-top:44px;">
-          <image style="margin-right:24px;width:64px;height:64px;border-radius:32px;" v-if="'news'!=item.isNews" :src="typeof item.pushUserHeadPortraitUrl==='undefined' ||item.pushUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':item.pushUserHeadPortraitUrl"></image>
+          <image style="background-color:#323845;margin-right:24px;width:64px;height:64px;border-radius:32px;" v-if="'news'!=item.isNews" :src="typeof item.pushUserHeadPortraitUrl==='undefined' ||item.pushUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':item.pushUserHeadPortraitUrl"></image>
           <text class="d-title">{{'news'==item.isNews?item.title:item.pushUserNick}}</text>
           <image style="width:44px;height:44px;margin-left:24px;" v-if="'news'!=item.isNews" src="bmlocal://assets/follow.png"></image>
         </div>
-        <text style="size:28px;color:white;margin-top:24px;" v-if="'news'!=item.isNews">{{item.title}}</text>
+        <text style="size:28px;color:white;margin-top:24px;lines:5;text-overflow:ellipsis;"  v-if="'news'!=item.isNews">{{item.title}}</text>
         <!-- 图片显示区 -->
         <div v-if="typeof item.imagesUrl!=='undefined'&&item.imagesUrl!=null&&item.imagesUrl!=='null'" style="flex-direction:colum;margin-top:28px;margin-bottom:28px;height:308px;">
           <!-- 只有一张 -->
-          <image v-if="getImageUrlNums(item.imagesUrl)===1||getImageUrlNums(item.imagesUrl)>=3"  :class="[getImageUrlNums(item.imagesUrl)===1?'d-image':'d-image-left']" resize="cover" :src="item.imagesUrl.split(',')[0]"></image>
+          <image style="background-color:#323845;" v-if="getImageUrlNums(item.imagesUrl)===1||getImageUrlNums(item.imagesUrl)>=3"  :class="[getImageUrlNums(item.imagesUrl)===1?'d-image':'d-image-left']" resize="cover" :src="item.imagesUrl.split(',')[0]"></image>
           <!-- 只有两张 -->
           <div v-if="getImageUrlNums(item.imagesUrl)===2" class="d-image" style="flex-direction:colum;">
-            <image style="flex:1;" resize="cover" :src="item.imagesUrl.split(',')[0]"></image>
-            <image style="flex:1;margin-left:12px;" resize="cover" :src="item.imagesUrl.split(',')[1]"></image>
+            <image style="background-color:#323845;flex:1;" resize="cover" :src="item.imagesUrl.split(',')[0]"></image>
+            <image style="background-color:#323845;flex:1;margin-left:12px;" resize="cover" :src="item.imagesUrl.split(',')[1]"></image>
           </div>
           <!-- 三张或三张以上 -->
           <div v-if="getImageUrlNums(item.imagesUrl)>=3" class="d-image-right"  style="margin-left:12px;">
-            <image style="flex:1;" resize="cover" :src="item.imagesUrl.split(',')[1]"></image>
-            <image style="margin-top:12px;flex:1;" resize="cover" :src="item.imagesUrl.split(',')[2]"></image>
+            <image style="background-color:#323845;flex:1;" resize="cover" :src="item.imagesUrl.split(',')[1]"></image>
+            <image style="background-color:#323845;margin-top:12px;flex:1;" resize="cover" :src="item.imagesUrl.split(',')[2]"></image>
             <text v-if="getImageUrlNums(item.imagesUrl)>3" style="size:28px;color:#FFFFFF;position:absolute;bottom:0px;right:12px;">{{getImageUrlNums(item.imagesUrl)}}</text>
           </div>
         </div>
