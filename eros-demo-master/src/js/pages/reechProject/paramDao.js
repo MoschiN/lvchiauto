@@ -2,6 +2,7 @@
 export default {
     getParamsJSON,
     isEmpty,
+    clearArray,
 }
 function get() {
     return '0'
@@ -48,4 +49,12 @@ function isEmpty(base, param) {
         return true
     else
         return false
+}
+
+function clearArray(array) {
+    if (array == null)
+        return
+    while (array.length > 0) {
+        array.pop()
+    }
 }

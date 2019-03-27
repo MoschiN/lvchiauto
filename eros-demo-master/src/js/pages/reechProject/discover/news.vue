@@ -19,7 +19,7 @@
         <!-- 图片显示区 -->
         <div v-if="typeof item.imagesUrl!=='undefined'&&item.imagesUrl!=null&&item.imagesUrl!=='null'" style="flex-direction:colum;margin-top:28px;margin-bottom:28px;height:308px;">
           <!-- 只有一张 -->
-          <image style="background-color:#323845;" v-if="getImageUrlNums(item.imagesUrl)===1||getImageUrlNums(item.imagesUrl)>=3"  :class="[getImageUrlNums(item.imagesUrl)===1?'d-image':'d-image-left']" resize="cover" :src="item.imagesUrl.split(',')[0]"></image>
+          <image style="background-color:#323845;" v-if="getImageUrlNums(item.imagesUrl)!==2"  :class="[getImageUrlNums(item.imagesUrl)===1?'d-image':'d-image-left']" resize="cover" :src="item.imagesUrl.split(',')[0]"></image>
           <!-- 只有两张 -->
           <div v-if="getImageUrlNums(item.imagesUrl)===2" class="d-image" style="flex-direction:colum;">
             <image style="background-color:#323845;flex:1;" resize="cover" :src="item.imagesUrl.split(',')[0]"></image>

@@ -59,8 +59,20 @@ export default {
             if(params.index!==this.curIndex){
                 this.curIndex=params.index
             }
-            if(params.isRefresh===1){
+            
+            if(params.isRefresh===1||params.isRefresh===3){
                 this.discoverDateParams[params.index].start=0
+                if(params.index===0){
+                    paramDao.clearArray(this.discoverData0)
+                    this.discoverData0=null
+                }else if(params.index===1){
+                    paramDao.clearArray(this.discoverData1)
+                    this.discoverData1=null
+                }else if(params.index===2){
+                    paramDao.clearArray(this.discoverData2)
+                    this.discoverData2=null
+                }
+              
             }
             this.discoveryQuery(this.getDiscoveryParams(params.index,params.isRefresh))
         })
@@ -152,14 +164,26 @@ export default {
                     }
               }else{
                     if(params.index===0){
-                        if(params.isRefresh===1||this.discoverData0==null)
-                            this.discoverData0=resData.data.context
+                        if(params.isRefresh===1||this.discoverData0==null){
+                            //   if(this.discoverData0!=null){
+                            //       paramDao.clearArray(this.discoverData0)
+                            //   }
+                              this.discoverData0=resData.data.context
+                        }
                     }else if(params.index===1){
-                        if(params.isRefresh===1||this.discoverData1==null)
+                        if(params.isRefresh===1||this.discoverData1==null){
+                            //   if(this.discoverData1!=null){
+                            //       paramDao.clearArray(this.discoverData1)
+                            //   }
                             this.discoverData1=resData.data.context
+                        }
                     }else if(params.index===2){
-                        if(params.isRefresh===1||this.discoverData2==null)
+                        if(params.isRefresh===1||this.discoverData2==null){
+                            //   if(this.discoverData2!=null){
+                            //       paramDao.clearArray(this.discoverData2)
+                            //   }
                             this.discoverData2=resData.data.context
+                        }
                     }
                     if(params.isRefresh===1){
                         this.$event.emit('scrollToFirst_'+params.index)
