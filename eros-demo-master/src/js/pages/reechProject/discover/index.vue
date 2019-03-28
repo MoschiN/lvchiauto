@@ -132,6 +132,7 @@ export default {
           paramMap.set('userId',this.loginInfo.data.userInfo.userId)
           paramMap.set('pageNum',params.pageNum)
           paramMap.set('start',params.start)
+          paramMap.set('status',"Y")
           this.$fetch({
               method: 'POST',    // 大写
               name: params.fetchName, //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx

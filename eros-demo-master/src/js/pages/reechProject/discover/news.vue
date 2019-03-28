@@ -77,6 +77,7 @@ export default {
       })
       // 判断是否滚动到第一项
       this.$event.on('scrollToFirst_'+this.index,itemData=>{
+        if(typeof this.$refs.cell_0!=='undefined')
         dom.scrollToElement(this.$refs.cell_0[0], {})
       })
   },
@@ -161,6 +162,7 @@ export default {
       // }
     },
     onclickitem(item,index,toReviewArea) {
+      console.log(item.id)
       item.position=index
       this.$router.open({
         name:this.detailRountName,
