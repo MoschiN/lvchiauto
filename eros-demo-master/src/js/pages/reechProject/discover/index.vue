@@ -163,7 +163,6 @@
 					fetchName = "DISCOVERY.queryDynamic";
 				} else if (index === 3) {
 					fetchName = "DISCOVERY.searchDynamic";
-					// fetchName = "DISCOVERY.queryDynamic";
 				}
 				var paramJson = {};
 				paramJson.fetchName = fetchName;
@@ -184,13 +183,11 @@
 				paramMap.set("userId", this.loginInfo.data.userInfo.userId);
 				paramMap.set("pageNum", params.pageNum);
 				if (params.index === 3) {
-					this.$notice.toast({
-						message: params.searchCondition
-					});
 					paramMap.set("context", params.searchCondition);
 				}
 				paramMap.set("start", params.start);
 				paramMap.set("status", "Y");
+				console.log(paramMap);
 				this.$fetch({
 					method: "POST", // 大写
 					name: params.fetchName, //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx

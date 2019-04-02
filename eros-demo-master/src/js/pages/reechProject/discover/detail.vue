@@ -212,9 +212,13 @@
 					resData => {
 						if (resData.code === 1000) {
 							this.discoverDataItem.browseNum++;
-							this.$event.emit("addBrowser_" + this.curIndex, {
-								position: this.discoverDataItem.position
-							});
+							if (typeof this.discoverDataItem.position === "undefined") {
+								this.$event.emit("discoveryS", this.discoverDataItem);
+							} else {
+								this.$event.emit("addBrowser_" + this.curIndex, {
+									position: this.discoverDataItem.position
+								});
+							}
 						}
 					},
 					error => {

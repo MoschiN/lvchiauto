@@ -101,6 +101,7 @@
 				} else {
 					this.searchData[params.pos].hasLike = params.hasLike;
 					this.searchData[params.pos].likeNum = params.likeNum;
+					this.searchData[params.pos].browseNum = params.browseNum;
 				}
 			});
 			this.$router.getParams().then(params => {
