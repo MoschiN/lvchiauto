@@ -1,6 +1,7 @@
 
 export default {
     getParamsJSON,
+    getBaseUrl,
     isEmpty,
     clearArray,
     dateFormat,
@@ -25,6 +26,7 @@ function getParamsJSON(paramMap) {
     jsonObj['reechautoSign'] = MD5.hex_md5(signStr + "reechauto@123")
     return jsonObj
 }
+
 function getParamsForm(paramMap) {
     // 添加客户端信息和时间戳
     paramMap.set('ct', 'android')
@@ -40,6 +42,16 @@ function getParamsForm(paramMap) {
         formText += '&' + keyStr + '=' + valueStr
     }
     return formText.substring(1)
+}
+
+function getBaseUrl(url) {
+    if (url === 2) {
+        return 'http://10.120.8.187:9966'
+    } else {
+        return 'http://10.120.8.187:7766'
+    }
+
+
 }
 
 function isEmpty(base, param) {

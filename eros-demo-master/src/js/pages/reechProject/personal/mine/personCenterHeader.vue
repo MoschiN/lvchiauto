@@ -7,24 +7,24 @@
         </div>
         <div class="header-mid">
             <image class="headImage" resize="cover" :src="headImage"></image>
-            <text style="margin-top:14px;height: 48px;font-size:34px;color: white">{{name}}</text>
-            <div class="sexCity" style=" margin-top: 6px;flex-direction:row;align-items: center;">
-                <image class="headImage" resize="cover" :src="sex == 1 ? manImage : womanImage" style="margin-top:0px;width:24px;height:24px;"></image>
-                <text style="margin-left: 6px;font-size:26px;color: #9BA3B2">{{city}}</text>
+            <text style="margin-top:14px;height: 48px;font-size:34px;color: white">{{personnfo.realName}}</text>
+            <div class="sexCity" style="margin-top: 6px;flex-direction:row;align-items: center;">
+                <image class="headImage" resize="cover" :src="personnfo.sex === '保密' ? manImage : womanImage" style="margin-top:0px;width:24px;height:24px;"></image>
+                <text style="margin-left: 6px;font-size:26px;color: #9BA3B2">{{personnfo.city}}</text>
             </div>
             <div class="likeFocusFans">
                 <div class="btn1" style="flex-direction: row; margin-right: 100px;">
                    <text class="commonBtn">获赞</text>
-                   <text class="likeNum" style="margin-left:12px;color: #43CBA8;font-size: 28px">16</text>
+                   <text class="likeNum" style="margin-left:12px;color: #43CBA8;font-size: 28px">00</text>
                 </div>
                 <div class="btn2" style="flex-direction: row;">
                     <text class="commonBtn">粉丝</text>
-                    <text class="fansNum" style="margin-left:12px;color: #43CBA8;font-size: 28px">16</text>
+                    <text class="fansNum" style="margin-left:12px;color: #43CBA8;font-size: 28px">00</text>
 
                 </div>
                 <div class="btn3" style="margin-left:100px;flex-direction: row;">
                     <text class="commonBtn">关注</text>
-                    <text class="fansNum" style="margin-left:12px;color: #43CBA8;font-size: 28px">16</text>
+                    <text class="fansNum" style="margin-left:12px;color: #43CBA8;font-size: 28px">00</text>
                 </div>
             </div>
         </div>
@@ -41,6 +41,19 @@
 
 <script>
     export default {
+        props: ["personnfo"],
+        mounted(){
+            setTimeout(handler=>{
+                this.$notice.toast({
+                    message:this.personinfo
+                })
+            },1500)
+
+            // this.$event.on('total',num=>{
+            //     this.realseNum = num
+            //
+            // })
+        },
         data(){
             return{
 
@@ -53,7 +66,7 @@
                 focus:32,
                 manImage: "bmlocal://assets/Mine/sexMan.png",
                 womanImage: "",
-                realseNum:12
+                realseNum:0
             }
         },
     }

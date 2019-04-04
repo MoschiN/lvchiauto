@@ -3,22 +3,22 @@
 
         <div class="header-mid" style="flex-direction: row;align-items: center">
 
-            <image class="headImage" resize="cover" :src="model.headImage"></image>
-            <text class="name">{{model.name}}</text>
+            <image class="headImage" resize="cover" :src="typeof model.pushUserHeadPortraitUrl ==='undefined' || model.pushUserHeadPortraitUrl ==='null'||model.pushUserHeadPortraitUrl == null ? 'bmlocal://assets/Mine/personHeadImage.png' : model.pushUserHeadPortraitUrl"></image>
+            <text class="name">{{model.pushUserNick}}</text>
         </div>
-        <text class="detailContent">{{model.content}}</text>
-        <div class="pictureView">
-            <image class="bg1" resize="cover" :src="model.bg1"></image>
-            <image class="bg2" resize="cover" :src="model.bg2"></image>
-            <image class="bg3" resize="cover" :src="model.bg3"></image>
+        <text class="detailContent">{{model.title}}</text>
+        <div v-if="model.imagesUrl.split(',')[0] !== '' || typeof model.imagesUrl.split(',')[0] !=='undefined' ||  model.imagesUrl.split(',')[0] !=='null' ||model.imagesUrl.split(',')[0] !== null " class="pictureView">
+            <image v-if="model.imagesUrl.split(',').length >0" class="bg1" resize="cover" :src="model.imagesUrl.split(',')[0]"></image>
+            <image v-if="model.imagesUrl.split(',').length >1" class="bg2" resize="cover" :src="model.imagesUrl.split(',')[1]"></image>
+            <image v-if="model.imagesUrl.split(',').length >2" class="bg3" resize="cover" :src="model.imagesUrl.split(',')[2]"></image>
         </div>
         <div class="bottomView" style="margin-top: 28px;flex-direction: row;align-items: center">
-            <text class="text" style="margin-left: 36px">{{model.time}}分钟前 </text>
+            <text class="text" style="margin-left: 36px">{{model.createTime}}分钟前 </text>
             <div style="flex: 1"></div>
             <div class="LikeView">
                 <image class="LikeImage" resize="cover" :src="onlikeImg"></image>
             </div>
-            <text class="text" style="margin-right:36px">{{model.time}}</text>
+            <text class="text" style="margin-right:36px">{{model.likeNum}}</text>
 
         </div>
 

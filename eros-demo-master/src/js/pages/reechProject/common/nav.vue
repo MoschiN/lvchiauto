@@ -6,7 +6,7 @@
                 <text style="margin-top: 0px;font-size:36px;color:white">{{title}}</text>
             </div>
 
-            <div style="justify-content: center;margin-left: 0px;width: 150px;" >
+            <div style="justify-content: center;margin-left: 0px;width: 150px;"@click="rightAction()">
             <text class="rightBtn"  v-if="isShowRightBtn == false" style="font-size:32px;color:#272C39;">暂无</text>
             <text class="rightBtn"  v-else :style="{fontSize:textFont,color:textColor}">{{rightText}}</text>
             </div>
@@ -16,7 +16,7 @@
 
 <script>
     export default {
-        props:['title','isShowRightBtn','rightText','textColor','textFont'],
+        props:['title','isShowRightBtn','rightText','textColor','textFont','which'],
         created(){
             if(!this.textColor){
                this.textColor = '#43CBA8'
@@ -28,7 +28,12 @@
         methods:{
             backAction(){
                 this.$router.back()
-            }
+            },
+           rightAction(){
+               if(this.which!=null){
+                   this.$event.emit(this.which)
+               }
+           }
         },
         data(){
             return{

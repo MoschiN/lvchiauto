@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <div class="container">
       <d-news v-if="curIndex===0" style="flex:1;"/>
       <my-car v-else-if="curIndex===1" style="flex:1;"></my-car>
@@ -13,7 +14,7 @@
       </div>
     </div>
   </div>
-  
+
 </template>
 <style scoped>
 .container {
@@ -40,7 +41,7 @@
 </style>
 <script>
 import dNews from './discover/index.vue'
-import myCar from './myCar/index.vue' 
+import myCar from './myCar/index.vue'
 import myServer from './server/index.vue'
 import myMine from './personal/index.vue'
 import paramDao from './paramDao'
@@ -65,7 +66,7 @@ export default {
   methods:{
       onClickTab(index){
            this.curIndex=index;
-          
+
       },
       androidFinishApp () {
             const globalEvent = weex.requireModule('globalEvent')
@@ -84,7 +85,7 @@ export default {
           var paramMap=new Map()
           paramMap.set('mobileNum',phoneNum)
           paramMap.set('smsCode',sms)
-         
+
           this.$fetch({
               method: 'POST',    // 大写
               name: 'AUTH.loginBySms', //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
@@ -108,7 +109,7 @@ export default {
           var paramMap=new Map()
           paramMap.set('username',userName)
           paramMap.set('password',pwd)
-      
+            console.log('张春晓')
         this.$fetch({
               method: 'POST',    // 大写
               // url:'http://10.120.8.187:7766/login/pwd',
@@ -141,8 +142,8 @@ export default {
               console.log(error)
           })
         },
-        
-        
+
+
   },
   data() {
     return {
@@ -176,7 +177,7 @@ export default {
           item: "dicover"
         }
       ],
-     
+
     };
   }
 };

@@ -2,14 +2,18 @@
     <div class="wrapper">
         <div class="view" @click="jumpDetail(model)">
             <div class="questionView">
-                <text class="text" style="margin-left:19px;margin-top: 35px ">{{model.question}}</text>
+                <text class="text" style="margin-left:19px;margin-top: 35px ">问:{{model.question}}</text>
                 <text class="time" style="margin-top: 34px;margin-left:430px">{{model.questionTime}}</text>
             </div>
-            <div class="line" style="height:2px;margin-left: 0px;margin-right: 0px;background-color:#1A2131"></div>
-            <div class="answerView">
-                <text class="text" style="margin-left:19px;margin-top: 35px ">{{model.answer}}</text>
-                <text class="time" style="margin-top: 34px;margin-left:430px">{{model.answerTime}}</text>
+            <div v-if="model.answer != null">
+                <div class="line" style="height:2px;margin-left: 0px;margin-right: 0px;background-color:#1A2131"></div>
+                <div class="answerView">
+
+                    <text class="text" style="margin-left:19px;margin-top: 35px">答:{{model.answer}}</text>
+                    <text class="time" style="margin-top: 34px;margin-left:430px">{{model.answerTime}}</text>
+                </div>
             </div>
+
 
         </div>
     </div>
@@ -19,7 +23,14 @@
     export default {
         props: ["model"],
         methods:{
+
+
             jumpDetail(model){
+
+                    this.$notice.toast({
+                        message: this.model
+                    }),
+
                 this.$router.open({
                     name:'suggestDetail',
                     params: this.model

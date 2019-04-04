@@ -24,4 +24,25 @@ export default {
     'DISCOVERY.removeLikes': '/news/newsshare/removeLikes',
     // 添加浏览数
     'DISCOVERY.browse': '/news/news/browse',
+
+    //获得个人信息
+     'USERINFO':'/authorization/userinfo',
+    //查询我的消息
+    'MINEMESSAGE':'/news/notice/query',
+    //全部已读
+    'READALL':'/news/notice/readAll',
+    //未读个数
+    'NOREAD':'/news/notice/noread',
+    //读单条
+    'READ':'/news/notice/read',
+
+
+    //意见反馈
+    'SUGGESTList':'/news/feedback/queryFeedbacksByUserId',
+    //提交意见反馈
+    'addQuestion':'/news/feedback/addQuestion',
+
+    //查询我的动态
+    'MINESHARE':'/news/share/me'
+
 }
