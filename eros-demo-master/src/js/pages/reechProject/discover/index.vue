@@ -111,7 +111,8 @@
 						params.isRefresh,
 						typeof params.searchCondition === "undefined"
 							? null
-							: params.searchCondition
+							: params.searchCondition,
+						typeof params.dataLength === "undefined" ? 0 : params.dataLength
 					)
 				);
 			});
@@ -151,7 +152,7 @@
 				});
 			},
 			// 获取连接api的name
-			getDiscoveryParams(index, isRefresh, searchCondition) {
+			getDiscoveryParams(index, isRefresh, searchCondition, dataLength) {
 				var fetchName;
 				var pageNum = this.discoverDateParams[index].pageNum;
 				var start = this.discoverDateParams[index].start;
@@ -170,6 +171,7 @@
 				paramJson.start = start;
 				paramJson.index = index;
 				paramJson.isRefresh = isRefresh;
+				paramJson.dataLength = dataLength;
 				if (searchCondition != null) paramJson.searchCondition = searchCondition;
 				return paramJson;
 			},
@@ -199,11 +201,23 @@
 					resData => {
 						console.log(resData);
 
+						this.$event.emit("refreshOrLoading", {
+							isRefreshShow: false,
+							isLoadingShow: false
+						});
 						// 为别的界面添加数据
 						if (params.index === 3) {
-							this.$event.emit("discoveryS", resData.data.context);
+							this.$event.emit("discoveryS", {
+								data: resData.data.context,
+								isRefresh: params.isRefresh
+							});
+
+							var dataLength = 0;
+							if (typeof params.dataLength !== "undefined") {
+								dataLength = params.dataLength;
+							}
 							this.discoverDateParams[params.index].start =
-								resData.data.context.length;
+								resData.data.context.length + dataLength;
 							return;
 						}
 
@@ -239,21 +253,33 @@
 							}
 						} else {
 							if (params.index === 0) {
-								if (params.isRefresh === 1 || this.discoverData0 == null) {
+								if (
+									params.isRefresh === 1 ||
+									this.discoverData0 == null ||
+									this.discoverData0.length == 0
+								) {
 									//   if(this.discoverData0!=null){
 									//       paramDao.clearArray(this.discoverData0)
 									//   }
 									this.discoverData0 = resData.data.context;
 								}
 							} else if (params.index === 1) {
-								if (params.isRefresh === 1 || this.discoverData1 == null) {
+								if (
+									params.isRefresh === 1 ||
+									this.discoverData1 == null ||
+									this.discoverData1.length == 0
+								) {
 									//   if(this.discoverData1!=null){
 									//       paramDao.clearArray(this.discoverData1)
 									//   }
 									this.discoverData1 = resData.data.context;
 								}
 							} else if (params.index === 2) {
-								if (params.isRefresh === 1 || this.discoverData2 == null) {
+								if (
+									params.isRefresh === 1 ||
+									this.discoverData2 == null ||
+									this.discoverData2.length == 0
+								) {
 									//   if(this.discoverData2!=null){
 									//       paramDao.clearArray(this.discoverData2)
 									//   }
@@ -294,6 +320,13 @@
 						this.$notice.toast({
 							message: error
 						});
+						if (params.index === 3) {
+							this.$event.emit("refreshOrLoading", {
+								isRefreshShow: false,
+								isLoadingShow: false
+							});
+							return;
+						}
 						if (params.isRefresh === 1) {
 							this.isRefreshShow = false;
 							setTimeout(handler => {
@@ -315,9 +348,9 @@
 				loginInfo: null,
 				isLoadingShow: true,
 				isRefreshShow: true,
-				discoverData0: null,
-				discoverData1: null,
-				discoverData2: null,
+				discoverData0: [],
+				discoverData1: [],
+				discoverData2: [],
 				discoverDateParams: [
 					{
 						pageNum: 10,

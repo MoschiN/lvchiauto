@@ -144,6 +144,10 @@
 				if (typeof this.$refs.cell_0 !== "undefined")
 					dom.scrollToElement(this.$refs.cell_0[0], {});
 			});
+			this.$event.on("refreshOrLoading", params => {
+				this.lastRefreshTime = "最后更新：" + paramDao.dateFormat();
+				this.lastLoadingTime = "最后加载：" + paramDao.dateFormat();
+			});
 		},
 		components: {},
 		data() {
@@ -151,9 +155,9 @@
 				test: false,
 				loginInfo: null,
 				refreshStateStr: "下拉刷新",
-				lastRefreshTime: "最后更新：今天 13：57",
+				lastRefreshTime: "最后更新：" + paramDao.dateFormat(),
 				loadingStateStr: "上拉加载",
-				lastLoadingTime: "最后加载：今天 13：57",
+				lastLoadingTime: "最后加载：" + paramDao.dateFormat(),
 				detailRountName: "discoverdetail"
 			};
 		},

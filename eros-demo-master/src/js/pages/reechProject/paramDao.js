@@ -3,9 +3,7 @@ export default {
     getParamsJSON,
     isEmpty,
     clearArray,
-}
-function get() {
-    return '0'
+    dateFormat,
 }
 
 
@@ -57,4 +55,34 @@ function clearArray(array) {
     while (array.length > 0) {
         array.pop()
     }
+}
+
+function dateFormat() {
+    var date = new Date();
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var hourStr = date.getHours();
+    if (hourStr >= 0 && hourStr <= 9) {
+        hourStr = "0" + hourStr;
+    }
+    var minStr = date.getMinutes();
+    if (minStr >= 0 && minStr <= 9) {
+        minStr = "0" + minStr;
+    }
+    var secondStr = date.getSeconds();
+    if (secondStr >= 0 && secondStr <= 9) {
+        secondStr = "0" + secondStr;
+    }
+    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+        + " " + hourStr + seperator2 + minStr;
+    // + seperator2 + secondStr;
+    return currentdate;
 }

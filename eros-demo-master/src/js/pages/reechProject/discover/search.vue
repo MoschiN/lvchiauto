@@ -16,6 +16,7 @@
 						placeholder-color="#9BA3B2"
 						return-key-type="search"
 						@input="onInput"
+						@change="onChange"
 						@return="onSearch"
 					>
 					<image
@@ -31,6 +32,23 @@
 			<div></div>
 			<!-- 搜索结果 -->
 			<list style="margin-top:30px;padding-left:36px;padding-right:36px;">
+				<refresh
+					@refresh="onRefresh"
+					@pullingdown="onPullingdown"
+					:display="isRefreshShow?'show':'hide'"
+					style="align-items:center;"
+				>
+					<div style="flex-direction:row;justify-content:center;align-items:center;padding:43px;">
+						<image
+							style="width:51px;height:58px;margin-right:16px;"
+							src="bmlocal://assets/icon_static.png"
+						>
+						<div>
+							<text style="size:26px;color:#868C97;">{{refreshStateStr}}</text>
+							<text style="size:26px;color:#868C97;margin-top:4px;">{{lastRefreshTime}}</text>
+						</div>
+					</div>
+				</refresh>
 				<cell v-for="(item,position) in searchData" :key="position" @click="onItemClick(item,position)">
 					<div style="flex-direction:row;">
 						<image
@@ -44,18 +62,39 @@
 							style="height:120px;margin-top:48px;margin-bottom:48px;"
 						></div>
 						<div style="margin-top:48px;flex:1;">
-							<text
-								style="color:#FFFFFF;font-size:28px;"
-								:style="{lines:3,textOverflow:ellipsis,}"
-							>{{item.title}}</text>
-							<text
+							<bmrichtext style="color:#FFFFFF;font-size:28px;" :style="{lines:3,textOverflow:ellipsis,}">
+								<div v-for="(v,i) in splitToArray(item.title)" :key="i">
+									<bmspan :value="v" :style="{color:i%2===0?'#FFFFFF':'#43CBA8'}"></bmspan>
+								</div>
+							</bmrichtext>
+							<bmrichtext
 								v-if="item.isNews==='news'"
-								style="margin-top:14px;color:#FFFFFF;font-size:24px;lines:2;text-overflow:ellipsis;"
-							>{{item.contextTxt}}</text>
+								style="margin-top:14px;lines:2;color:#ffffff;font-size:24px;flex-direction:row;flex-wrap:wrap;text-overflow:ellipsis"
+							>
+								<div v-for="(v,i) in splitToArray(item.contextTxt)" :key="i">
+									<bmspan :value="v" :style="{color:i%2===0?'#FFFFFF':'#43CBA8'}"></bmspan>
+								</div>
+							</bmrichtext>
 						</div>
 					</div>
 					<div style="width:auto;height:1px;background-color:#1A2131"></div>
 				</cell>
+				<loading
+					@loading="onLoading"
+					:display="isLoadingShow?'show':'hide'"
+					style="align-items:center;"
+				>
+					<div style="flex-direction:row;justify-content:center;align-items:center;padding:43px;">
+						<image
+							style="width:51px;height:58px;margin-right:16px;"
+							src="bmlocal://assets/icon_static.png"
+						>
+						<div>
+							<text style="size:26px;color:#868C97;">{{loadingStateStr}}</text>
+							<text style="size:26px;color:#868C97;margin-top:4px;">{{lastLoadingTime}}</text>
+						</div>
+					</div>
+				</loading>
 			</list>
 		</div>
 	</div>
@@ -93,11 +132,22 @@
 </style>
 
 <script>
+	import paramDao from "../paramDao";
 	export default {
 		created() {
 			this.$event.on("discoveryS", params => {
 				if (typeof params.pos === "undefined") {
-					this.searchData = params;
+					if (params.isRefresh === 2) {
+						this.searchData.push.apply(this.searchData, params.data);
+					} else {
+						if (
+							params.isRefresh === 1 ||
+							this.searchData == null ||
+							this.searchData.length == 0
+						) {
+							this.searchData = params.data;
+						}
+					}
 				} else {
 					this.searchData[params.pos].hasLike = params.hasLike;
 					this.searchData[params.pos].likeNum = params.likeNum;
@@ -107,9 +157,32 @@
 			this.$router.getParams().then(params => {
 				this.curIndex = params.curIndex;
 			});
+			this.$event.on("refreshOrLoading", params => {
+				this.isRefreshShow = params.isRefreshShow;
+				this.isLoadingShow = params.isLoadingShow;
+				this.lastRefreshTime = "最后更新：" + paramDao.dateFormat();
+				this.lastLoadingTime = "最后加载：" + paramDao.dateFormat();
+				setTimeout(handler => {
+					this.isRefreshShow = true;
+					this.isLoadingShow = true;
+				}, 500);
+			});
 		},
 		methods: {
 			clearText() {},
+			splitToArray(content) {
+				var key = this.valueText;
+				if (!key) return [content];
+				var srcArray = content.split(key);
+				var resultArray = new Array();
+				if (srcArray != null) {
+					for (var i = 0; i < srcArray.length; i++) {
+						resultArray[2 * i] = srcArray[i];
+						if (i < srcArray.length - 1) resultArray[2 * i + 1] = key;
+					}
+				}
+				return resultArray;
+			},
 			onItemClick(item, position) {
 				item.pos = position;
 				this.$router.open({
@@ -132,18 +205,57 @@
 					if (this.isClear) this.isClear = false;
 				}
 			},
+			onChange(params) {
+				this.valueText = params.value;
+				// this.onSearch(params);
+			},
 			onSearch(params) {
+				this.searchData = [];
 				this.$event.emit("discoveryQ", {
 					index: 3,
-					isRefresh: 0,
+					isRefresh: 1,
 					searchCondition: params.value
 				});
+			},
+			onLoading() {
+				this.$event.emit("discoveryQ", {
+					index: 3,
+					isRefresh: 2,
+					searchCondition: this.valueText,
+					dataLength:
+						this.searchData == null || this.searchData.length == 0
+							? 0
+							: this.searchData.length
+				});
+			},
+			onRefresh() {
+				this.$event.emit("discoveryQ", {
+					index: 3,
+					isRefresh: 1,
+					searchCondition: this.valueText
+				});
+			},
+			onPullingDown(event) {
+				// if(event.type==='pullingdown')
+				// if(event.pullingDistance>=event.viewHeight){
+				//    this.$notice.toast({
+				//   message:'test'
+				// })
+				// }else{
+				// }
 			}
 		},
 		data() {
 			return {
+				isRefreshShow: true,
+				isLoadingShow: true,
+				refreshStateStr: "下拉刷新",
+				lastRefreshTime: "最后更新：" + paramDao.dateFormat(),
+				loadingStateStr: "上拉加载",
+				lastLoadingTime: "最后加载：" + paramDao.dateFormat(),
+				valueText: "",
 				curIndex: 0,
-				searchData: null,
+				searchData: [],
 				isClear: false,
 				isEdit: true,
 				statusHeight: Number.parseInt(
