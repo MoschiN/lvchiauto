@@ -3,6 +3,7 @@ export default {
     getParamsJSON,
     getBaseUrl,
     isEmpty,
+    clearArray,
 }
 function get() {
     return '0'
@@ -54,9 +55,18 @@ function getBaseUrl(url) {
 
 
 }
-function isEmpty(param) {
-    if (typeof (param) == 'undefined' || param == 'undefined' || param == 'null' || param == 'NULL' || param == 'Null' || param == '' || param == null)
+
+function isEmpty(base, param) {
+    if (!base.hasOwnProperty(param) || param == 'undefined' || param == 'null' || param == 'NULL' || param == 'Null' || param == '' || param == null)
         return true
     else
         return false
+}
+
+function clearArray(array) {
+    if (array == null)
+        return
+    while (array.length > 0) {
+        array.pop()
+    }
 }

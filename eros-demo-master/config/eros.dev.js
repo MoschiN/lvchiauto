@@ -38,6 +38,7 @@ module.exports = {
         'js/pages/reechProject/discover/detail.vue',//资讯
         'js/pages/reechProject/discover/pushdynamic.vue',//发布动态
         'js/pages/reechProject/discover/commentinput.vue',//评论输入界面
+        'js/pages/reechProject/discover/search.vue',//动态资讯搜索界面
         // 登录
         'js/pages/reechProject/login/index.vue',
         'js/pages/reechProject/login/msg.vue',

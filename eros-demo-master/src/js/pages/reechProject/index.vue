@@ -2,9 +2,9 @@
   <div>
 
     <div class="container">
-      <d-news :loginInfo="loginInfo" v-if="curIndex===0"/>
-      <my-car v-else-if="curIndex===1"></my-car>
-      <my-server v-else-if="curIndex===2"></my-server>
+      <d-news v-if="curIndex===0" style="flex:1;"/>
+      <my-car v-else-if="curIndex===1" style="flex:1;"></my-car>
+      <my-server v-else-if="curIndex===2" style="flex:1;"></my-server>
       <my-mine v-else></my-mine>
     </div>
     <div class="tab">
@@ -14,12 +14,16 @@
       </div>
     </div>
   </div>
+
 </template>
 <style scoped>
 .container {
   padding-top: 44px;
   flex: 1;
   background-color: #272c39;
+}
+.container_item{
+  flex:1;
 }
 .tab {
   background-color: #272c39;
@@ -62,6 +66,7 @@ export default {
   methods:{
       onClickTab(index){
            this.curIndex=index;
+
       },
       androidFinishApp () {
             const globalEvent = weex.requireModule('globalEvent')
@@ -89,7 +94,8 @@ export default {
               // this.$notice.toast({
               //     message:resData.data.token
               // })
-            this.loginInfo=resData
+             // 初始化推荐页
+              this.$event.emit('discoveryQ',{index:0,isRefresh:0})
             console.log(resData)
           }, error => {
               // 错误回调
@@ -123,10 +129,9 @@ export default {
               //     // "expires_in":6371}
               //     message:resData
               // })
-              this.loginInfo=resData
               // 将登陆信息持久化保存到本地,供各个界面使用.
               this.$storage.setSync('loginInfo', resData)
-               // 初始化推荐页
+              // 初始化推荐页
               this.$event.emit('discoveryQ',{index:0,isRefresh:0})
             console.log(resData)
           }, error => {
@@ -144,7 +149,6 @@ export default {
     return {
       preTime:0,
       curIndex:0,
-      loginInfo:null,
       tags: [
         {
           title: "发现",

@@ -9,6 +9,8 @@ export default {
     'DISCOVERY.queryNews': '/news/news/query',
     // 动态
     'DISCOVERY.queryDynamic': '/news/share/query',
+    // 搜索资讯或动态
+    'DISCOVERY.searchDynamic': '/news/newsshare/search',
     // 发布动态
     'DISCOVERY.pushDynamic': '/news/share/push',
     'uploadImage': '/api/file/upload',

@@ -57,7 +57,7 @@ export default {
     'homePage': {
         url: '/pages/reechProject/index.js'
     },
-    // 
+    // 志强
     'discover': {
         title: '发现模块',
         url: '/pages/reechProject/discover/index.js'
@@ -75,6 +75,10 @@ export default {
     'commentinput': {
         url: '/pages/reechProject/discover/commentinput.js'
     },
+    'discover.search': {
+        url: '/pages/reechProject/discover/search.js'
+    },
+    // 原生Demo
     'demo': {
         title: 'weex-eros demo',
         url: '/pages/demo/index.js'
