@@ -4,31 +4,32 @@
             <image class="i-image" resize="cover" src="bmlocal://assets/Mine/personHeadImage.png" @click="headerImageAction()"></image>
             <div class="name-integral" style="flex-direction: column;margin-left:35px">
                 <div class="name" style="flex-direction:row;height: 62px;">
-                    <text class="i-name">张春晓</text>
+                    <text class="i-name">{{name}}</text>
                     <image class="editimg" resize="cover" src="bmlocal://assets/Mine/editing.png" @click="editAction(name)">
                     </image>
                 </div>
                 <div class="integral" style="flex-direction:row;align-items:center;margin-top:18px;height:40px;" >
                     <image class="integralimg" resize="cover" src="bmlocal://assets/Mine/integralImg.png" style="margin-left: 0px;width:26px;height: 26px"></image>
-                    <text class="integral">1600积分</text>
+                    <text class="integral">0积分</text>
                     <image class="integral-arrow" resize="cover" src="bmlocal://assets/Mine/integral-arrow.png"></image>
                 </div>
             </div>
-            <div class="sign" style=" margin-left:120px;width:180px;height:76px">
+            <div style="flex: 1"></div>
+            <div class="sign" style=" margin-right:0px;width:180px;height:76px">
                 <text class="i-name" style="padding-left: 60px;color: #43CBA8;font-size: 34px">签到</text>
             </div>
         </div>
         <div class="view2" style="flex-direction: row;height:220px;align-items: center">
-            <div class="btn1" style="margin-left: 110px;background-color: #b4282d">
-                <text class="releaseNum" style="color: #43CBA8;font-size: 34px">16</text>
+            <div class="btn1" style="margin-left: 110px;align-items: center">
+                <text class="releaseNum" style="color: #43CBA8;font-size: 34px;">00</text>
                 <text class="commonBtn">发布</text>
             </div>
-            <div class="btn2" style="margin-left:127px;background-color: #d1f287">
-                <text class="fansNum" style="color: #43CBA8;font-size: 34px">16</text>
+            <div class="btn2" style="margin-left:127px;align-items: center">
+                <text class="fansNum" style="color: #43CBA8;font-size: 34px;">00</text>
                 <text class="commonBtn">粉丝</text>
             </div>
-            <div class="btn3" style="margin-left:127px;background-color: #d1f287">
-                <text class="focusNum" style="color: #43CBA8;font-size: 34px">16</text>
+            <div class="btn3" style="margin-left:127px;align-items: center">
+                <text class="focusNum" style="color: #43CBA8;font-size: 34px;">00</text>
                 <text class="commonBtn">关注</text>
             </div>
         </div>
@@ -37,8 +38,14 @@
 
 <script>
     export default {
+
         props: ["name","image","integral",
-            'fansNum','focusNum','releaseNum','isSign'],
+            'fansNum','focusNum','releaseNum','isSign','info'],
+        created(){
+            // this.$notice.toast({
+            //     message:this.name
+            // })
+        },
         methods: {
             editAction(string) {
                 this.$router.open({
@@ -48,10 +55,12 @@
                 // console.log(this.string);
             },
             headerImageAction(){
+
                 this.$router.open({
-                    name:'personCenter'
+                    name:'personCenter',
+                    params: {info:this.info}
                 })
-                // params: {name:this.string}
+
             }
         }
     }

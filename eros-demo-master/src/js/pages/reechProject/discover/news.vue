@@ -1,4 +1,5 @@
 <template>
+
   <list class="r-list container-discovery">
     <refresh @refresh="onRefresh" @pullingdown="onPullingdown" :display="isRefreshShow?'show':'hide'" style="align-items:center;">
       <div style="flex-direction:row;justify-content:center;align-items:center;padding:43px;">
@@ -10,14 +11,15 @@
       </div>
     </refresh>
     <cell v-for="(item,index) in discoverData" :key="index" @click="onclickitem(item,index,false)">
-        <div style="flex-direction:colum;align-items:center;margin-top:44px;">
+        <!--<div class="r-lt" style="width: 750px;height: 1000px;background-color: #1da1f2"> </div>-->
+        <div style="flex-direction:row;align-items:center;margin-top:44px;width: 678px">
           <image style="margin-right:24px;width:64px;height:64px;border-radius:32px;" v-if="'news'!=item.isNews" :src="typeof item.pushUserHeadPortraitUrl==='undefined' ||item.pushUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':item.pushUserHeadPortraitUrl"></image>
           <text class="d-title">{{'news'==item.isNews?item.title:item.pushUserNick}}</text>
           <image style="width:44px;height:44px;margin-left:24px;" v-if="'news'!=item.isNews" src="bmlocal://assets/follow.png"></image>
         </div>
-        <text style="size:28px;color:white;margin-top:24px;" v-if="'news'!=item.isNews">{{item.title}}</text>
+        <text style="size:28px;color:white;margin-top:24px;width: 678px" v-if="'news'!=item.isNews">{{item.title}}</text>
         <image v-if="typeof item.imagesUrl!=='undefined'" class="d-image" resize="cover" :src="item.imagesUrl==null?'':item.imagesUrl.split(',')[0]"></image>
-        <div class="layout-h">
+        <div class="layout-h" style="width: 678px">
             <text class="d-state-text" style="flex:1;">{{item.createTime}}</text>
             <image style="width:44px;height:44px;" src="bmlocal://assets/review_icon.png" @click="onclickitem(item,index,true)"/>
             <text class="d-state-text" style="margin-right:4px;">{{item.commentNum}}</text>
@@ -25,8 +27,8 @@
             <image v-else style="width:44px;height:44px;margni-left:40px;" :src="item.hasLike?'bmlocal://assets/like_icon.png':'bmlocal://assets/un_like_icon.png'" @click="onlike(item,index)"/>
             <text class="d-state-text" style="margin-left:8px;">{{'news'==item.isNews?item.browseNum:item.likeNum}}</text>
         </div>
-        <div style="width:auto;height:1px;background-color:#1A2131;margin-top:45px;"></div>
-        
+        <div style="width:678px;height:1px;background-color:#1A2131;margin-top:45px;"></div>
+
     </cell>
     <loading @loading="onLoading" :display="isLoadingShow?'show':'hide'" style="align-items:center;">
       <div style="flex-direction:row;justify-content:center;align-items:center;padding:43px;">
@@ -71,12 +73,12 @@ export default {
       detailRountName:'discoverdetail',
     }
   },
- 
+
   methods: {
     //  动态的点赞和取消点赞
     onlike(itemData,index){
-          
-          
+
+
           var paramMap=new Map()
           paramMap.set('newsShareId',itemData.id)
           paramMap.set('userId',this.loginInfo.data.userInfo.userId)
@@ -91,7 +93,7 @@ export default {
             if(resData.code===1000){
               const position=index<0?itemData.position:index
               this.discoverData[position].hasLike=!itemData.hasLike
-                
+
               if(this.discoverData[position].hasLike){
                 this.discoverData[position].likeNum++
               }else{
@@ -116,14 +118,14 @@ export default {
        this.$event.emit('discoveryQ',{index:this.index,isRefresh:1})
     },
     onPullingDown(event){
-     
+
       // if(event.type==='pullingdown')
       // if(event.pullingDistance>=event.viewHeight){
       //    this.$notice.toast({
       //   message:'test'
       // })
       // }else{
-        
+
       // }
     },
     onclickitem(item,index,toReviewArea) {

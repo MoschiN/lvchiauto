@@ -1,12 +1,12 @@
 <template xmlns="http://www.w3.org/1999/html">
     <div class="wrapper" @click="jumpWeb(name)">
             <image class="i-image" resize="cover" :src="image"></image>
-             <!-- <div v-if="name == '积分商城'"> -->
+              <div v-if="name == '积分商城'">
                 <text class="i-name-green">{{name}}</text>
-             <!-- </div>
-             <div v-else> -->
+              </div>
+             <div v-else>
                  <text class="i-name">{{name}}</text>
-             <!-- </div> -->
+              </div>
             <image class="i-arrow" resize="cover" :src="arrow"></image>
     </div>
 </template>
