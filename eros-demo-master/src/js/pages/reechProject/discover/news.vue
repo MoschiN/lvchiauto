@@ -19,6 +19,7 @@
 			:key="index"
 			:ref="'cell_'+index"
 			@click="onclickitem(item,index,false)"
+			style="width:678px;"
 		>
 			<div style="flex-direction:colum;align-items:center;margin-top:44px;">
 				<image
