@@ -87,6 +87,10 @@
 			this.loginInfo = this.$storage.getSync("loginInfo");
 			// 注册请求方法
 			this.$event.on("discoveryQ", params => {
+				if (params.isRefresh < 0) {
+					this.discoverDateParams[params.index].start = 0;
+					return;
+				}
 				// 如果不在当前标签则切换
 				if (params.index !== this.curIndex && params.index < 3) {
 					this.curIndex = params.index;
@@ -128,8 +132,8 @@
 			// 资讯和动态搜索
 			onClikSearch() {
 				this.$router.open({
-					name: "discover.search",
-					type: "push",
+					name: "discoverSearch",
+					type: "PUSH",
 					params: {
 						curIndex: this.curIndex
 					}
@@ -139,7 +143,7 @@
 			onClickPushDynamic() {
 				this.$router.open({
 					name: "pushDynamic",
-					type: "push"
+					type: "PUSH"
 				});
 			},
 			onTopTabClick(index) {
@@ -343,6 +347,7 @@
 				);
 			}
 		},
+
 		data() {
 			return {
 				loginInfo: null,

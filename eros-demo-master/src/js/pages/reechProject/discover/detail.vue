@@ -6,9 +6,9 @@
 			<scroller class="content" show-scrollbar="false">
 				<div
 					v-if="!isNews"
-					style="width:auto;height:auto;flex-direction:colum;justify-content:space-between;align-items:center;margin-top:34px;"
+					style="width:auto;height:auto;flex-direction:row;justify-content:space-between;align-items:center;margin-top:34px;"
 				>
-					<div style="flex-direction:colum;">
+					<div style="flex-direction:row;">
 						<image
 							style="background-color:#323845;width:64px;height:64px;margin-right:26px;border-radius:32px;"
 							:src="typeof discoverDataItem.pushUserHeadPortraitUrl==='undefined'||discoverDataItem.pushUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':discoverDataItem.pushUserHeadPortraitUrl"
@@ -21,8 +21,12 @@
 					<image style="width:33px;height:34px;" src="bmlocal://assets/follow.png">
 				</div>
 				<text
-					style="margin-top:40px;size:28px;color:#DDE2EC;"
+					style="margin-top:40px;size:28px;color:#DDE2EC;width:500px;height:500px;"
 				>{{discoverDataItem.isNews=='news'?discoverDataItem.context:discoverDataItem.title}}</text>
+				<!-- <text
+					style="margin-top:40px;size:28px;color:#DDE2EC;"
+				>{{discoverDataItem.isNews=='news'?discoverDataItem.context:discoverDataItem.title}}</text>-->
+
 				<image
 					v-for="(img,i) in imageUrls"
 					:key="i"
@@ -30,7 +34,7 @@
 					:style="{backgroundColor:'#323845',width:img.width,height:img.height,marginTop:40,marginBottom:0}"
 					@load="onImageLoad(img,$event)"
 				>
-				<div style="flex-direction:colum;margin-top:37px;justify-content:flex-end;align-items:center;">
+				<div style="flex-direction:row;margin-top:37px;justify-content:flex-end;align-items:center;">
 					<image v-if="isNews" style="width:34px;height:21px;" src="bmlocal://assets/browse_num.png">
 					<text
 						v-if="isNews"

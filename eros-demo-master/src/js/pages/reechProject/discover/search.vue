@@ -103,6 +103,7 @@
 	.input {
 		margin-left: 16px;
 		flex: 1;
+		align-self: center;
 		color: #ffffff;
 		font-size: 32px;
 	}
@@ -228,7 +229,10 @@
 							: this.searchData.length
 				});
 			},
-			onRefresh() {
+			onRefresh(event) {
+				this.$notice.toast({
+					message: "refresh()"
+				});
 				this.$event.emit("discoveryQ", {
 					index: 3,
 					isRefresh: 1,
@@ -244,6 +248,12 @@
 				// }else{
 				// }
 			}
+		},
+		destroyed() {
+			this.$event.emit("discoveryQ", {
+				index: 3,
+				isRefresh: -1
+			});
 		},
 		data() {
 			return {

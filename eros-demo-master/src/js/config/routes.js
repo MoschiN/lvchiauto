@@ -75,7 +75,7 @@ export default {
     'commentinput': {
         url: '/pages/reechProject/discover/commentinput.js'
     },
-    'discover.search': {
+    'discoverSearch': {
         url: '/pages/reechProject/discover/search.js'
     },
     // 原生Demo

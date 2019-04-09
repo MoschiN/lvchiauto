@@ -21,7 +21,7 @@
 			@click="onclickitem(item,index,false)"
 			style="width:678px;"
 		>
-			<div style="flex-direction:colum;align-items:center;margin-top:44px;">
+			<div style="flex-direction:row;align-items:center;margin-top:44px;">
 				<image
 					style="background-color:#323845;margin-right:24px;width:64px;height:64px;border-radius:32px;"
 					v-if="'news'!=item.isNews"
@@ -41,7 +41,7 @@
 			<!-- 图片显示区 -->
 			<div
 				v-if="typeof item.imagesUrl!=='undefined'&&item.imagesUrl!=null&&item.imagesUrl!=='null'"
-				style="flex-direction:colum;margin-top:28px;margin-bottom:28px;height:308px;"
+				style="flex-direction:row;margin-top:28px;margin-bottom:28px;height:308px;"
 			>
 				<!-- 只有一张 -->
 				<image
@@ -52,7 +52,7 @@
 					:src="item.imagesUrl.split(',')[0]"
 				>
 				<!-- 只有两张 -->
-				<div v-if="getImageUrlNums(item.imagesUrl)===2" class="d-image" style="flex-direction:colum;">
+				<div v-if="getImageUrlNums(item.imagesUrl)===2" class="d-image" style="flex-direction:row;">
 					<image
 						style="background-color:#323845;flex:1;"
 						resize="cover"
