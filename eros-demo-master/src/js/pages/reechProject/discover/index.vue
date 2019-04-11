@@ -84,7 +84,6 @@
 	const dom = weex.requireModule("dom");
 	export default {
 		created() {
-			this.loginInfo = this.$storage.getSync("loginInfo");
 			// 注册请求方法
 			this.$event.on("discoveryQ", params => {
 				if (params.isRefresh < 0) {
@@ -185,8 +184,10 @@
 			},
 			// 获取资讯
 			discoveryQuery(params) {
+				var loginInfo = this.$storage.getSync("loginInfo");
+				if (!loginInfo) return;
 				var paramMap = new Map();
-				paramMap.set("userId", this.loginInfo.data.userInfo.userId);
+				paramMap.set("userId", loginInfo.data.userInfo.userId);
 				paramMap.set("pageNum", params.pageNum);
 				if (params.index === 3) {
 					paramMap.set("context", params.searchCondition);
@@ -199,7 +200,7 @@
 					name: params.fetchName, //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
 					data: paramDao.getParamsJSON(paramMap),
 					header: {
-						Authorization: "Bearer  " + this.loginInfo.data.token.access_token
+						Authorization: "Bearer  " + loginInfo.data.token.access_token
 					}
 				}).then(
 					resData => {
@@ -350,7 +351,6 @@
 
 		data() {
 			return {
-				loginInfo: null,
 				isLoadingShow: true,
 				isRefreshShow: true,
 				discoverData0: [],

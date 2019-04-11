@@ -15,6 +15,7 @@
 						placeholder="搜索"
 						placeholder-color="#9BA3B2"
 						return-key-type="search"
+						:value="valueText"
 						@input="onInput"
 						@change="onChange"
 						@return="onSearch"
@@ -103,7 +104,7 @@
 	.input {
 		margin-left: 16px;
 		flex: 1;
-		align-self: center;
+		justify-items: center;
 		color: #ffffff;
 		font-size: 32px;
 	}
@@ -170,7 +171,9 @@
 			});
 		},
 		methods: {
-			clearText() {},
+			clearText(event) {
+				this.valueText = new String();
+			},
 			splitToArray(content) {
 				var key = this.valueText;
 				if (!key) return [content];
@@ -257,6 +260,7 @@
 		},
 		data() {
 			return {
+				count: 0,
 				isRefreshShow: true,
 				isLoadingShow: true,
 				refreshStateStr: "下拉刷新",
