@@ -15,6 +15,7 @@
 						placeholder="搜索"
 						placeholder-color="#9BA3B2"
 						return-key-type="search"
+						:value="valueText"
 						@input="onInput"
 						@change="onChange"
 						@return="onSearch"
@@ -103,6 +104,7 @@
 	.input {
 		margin-left: 16px;
 		flex: 1;
+		justify-items: center;
 		color: #ffffff;
 		font-size: 32px;
 	}
@@ -169,7 +171,9 @@
 			});
 		},
 		methods: {
-			clearText() {},
+			clearText(event) {
+				this.valueText = new String();
+			},
 			splitToArray(content) {
 				var key = this.valueText;
 				if (!key) return [content];
@@ -228,7 +232,10 @@
 							: this.searchData.length
 				});
 			},
-			onRefresh() {
+			onRefresh(event) {
+				this.$notice.toast({
+					message: "refresh()"
+				});
 				this.$event.emit("discoveryQ", {
 					index: 3,
 					isRefresh: 1,
@@ -245,8 +252,15 @@
 				// }
 			}
 		},
+		destroyed() {
+			this.$event.emit("discoveryQ", {
+				index: 3,
+				isRefresh: -1
+			});
+		},
 		data() {
 			return {
+				count: 0,
 				isRefreshShow: true,
 				isLoadingShow: true,
 				refreshStateStr: "下拉刷新",

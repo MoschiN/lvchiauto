@@ -4,8 +4,8 @@
         <div style="width:auto;height:2px;background-color:#212531;"></div>
         <scroller style="flex:1;background-color:#272C39;">
             <textarea type="text" v-model="context" placeholder="分享美好瞬间…" style="height:200px;lines:5;margin-top:49px;placeholder-color:#9BA3B2;color:white;size:28px;margin-left:36px;margin-right:36px;"/>
-            <div style="flex-direction:colum;flex-wrap:wrap;margin-top:49px;margin-left:36px;">
-                <div v-for="(img,i) in imgs" :key="i" style="width:172px;flex-direction:colum;padding-top:22px;">
+            <div style="flex-direction:row;flex-wrap:wrap;margin-top:49px;margin-left:36px;">
+                <div v-for="(img,i) in imgs" :key="i" style="width:172px;flex-direction:row;padding-top:22px;">
                     <image style="width:150px;height:150px;padding:1px;" resize="cover" :src="img===''?'bmlocal://assets/add_image.png':img.path" @click="onAdd(img==='')"></image>
                     <image v-if="img!==''" style="width:44px;height:44px;position:relative;top:-22px;right:22px;" src="bmlocal://assets/delete_image.png" @click="onDelImg(i)"></image>
                 </div>
