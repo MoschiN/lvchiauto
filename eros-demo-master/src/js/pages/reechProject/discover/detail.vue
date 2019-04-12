@@ -344,7 +344,7 @@
 				if (this.isNews && this.toReviewArea) {
 					setTimeout(() => {
 						this.toReviewPosition();
-					}, 1000);
+					}, 2000);
 				}
 			},
 
