@@ -21,15 +21,15 @@
 					<image style="width:33px;height:34px;" src="bmlocal://assets/follow.png">
 				</div>
 				<web
-			        v-if="discoverDataItem.isNews=='news'"
+					v-if="discoverDataItem.isNews=='news'"
 					ref="h5web"
 					style="margin-top:40px;size:28px;color:#DDE2EC;width:750px;"
-					:style="{height:webHeight}"
 					:data="discoverDataItem.context"
+					:style="{height:webHeight}"
 					@pagefinish="onWebLoad"
 				></web>
 				<text
-				    v-if="discoverDataItem.isNews!=='news'"
+					v-if="discoverDataItem.isNews!=='news'"
 					style="margin-top:40px;size:28px;color:#DDE2EC;"
 				>{{discoverDataItem.title}}</text>
 
@@ -113,282 +113,282 @@
 	</div>
 </template>
 <style scoped>
-.inputarea {
-  width: auto;
-  height: 288px;
-  background-color: rgba(155, 163, 178, 0.1);
-  padding: 36px;
-  color: white;
-  size: 32px;
-}
-.overlayer {
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  width: 750px;
-  height: 1334px;
-  z-index: 10;
-  background-color: rgba(21, 24, 31, 1);
-  opacity: 0.9;
-}
+	.inputarea {
+		width: auto;
+		height: 288px;
+		background-color: rgba(155, 163, 178, 0.1);
+		padding: 36px;
+		color: white;
+		size: 32px;
+	}
+	.overlayer {
+		position: fixed;
+		left: 0;
+		top: 0;
+		right: 0;
+		width: 750px;
+		height: 1334px;
+		z-index: 10;
+		background-color: rgba(21, 24, 31, 1);
+		opacity: 0.9;
+	}
 
-.mycomponent {
-  font-size: 30;
-  height: 50;
-  width: 750;
-}
+	.mycomponent {
+		font-size: 30;
+		height: 50;
+		width: 750;
+	}
 
-.content {
-  padding-left: 36px;
-  padding-right: 36px;
-  background-color: #272c39;
-}
+	.content {
+		padding-left: 36px;
+		padding-right: 36px;
+		background-color: #272c39;
+	}
 </style>
 <script>
-import navbar from "../nav/navbar.vue";
-import imagenavbar from "../nav/imagenavbar.vue";
-const dom = weex.requireModule("dom");
-const modal = weex.requireModule("modal");
-import Utils from "../utils";
-import paramDao from "../paramDao";
-export default {
-  created() {
-    this.loginInfo = this.$storage.getSync("loginInfo");
-    this.$event.on(this.onBackTag, params => {
-      if (this.isEdit) {
-        this.onCancelEdit();
-      } else {
-        this.$router.back();
-      }
-    });
-    this.$router.getParams().then(resData => {
-      this.discoverDataItem = resData.data;
-      this.isNews = resData.data.isNews === "news";
-      this.hasLike = resData.data.hasLike;
-      this.likeNum = resData.data.likeNum;
-      this.curIndex = resData.index;
+	import navbar from "../nav/navbar.vue";
+	import imagenavbar from "../nav/imagenavbar.vue";
+	const dom = weex.requireModule("dom");
+	const modal = weex.requireModule("modal");
+	import Utils from "../utils";
+	import paramDao from "../paramDao";
+	export default {
+		created() {
+			this.loginInfo = this.$storage.getSync("loginInfo");
+			this.$event.on(this.onBackTag, params => {
+				if (this.isEdit) {
+					this.onCancelEdit();
+				} else {
+					this.$router.back();
+				}
+			});
+			this.$router.getParams().then(resData => {
+				this.discoverDataItem = resData.data;
+				this.isNews = resData.data.isNews === "news";
+				this.hasLike = resData.data.hasLike;
+				this.likeNum = resData.data.likeNum;
+				this.curIndex = resData.index;
 
-      if (typeof this.discoverDataItem.imagesUrl !== "undefined") {
-        var arrays = this.discoverDataItem.imagesUrl.split(",");
+				if (typeof this.discoverDataItem.imagesUrl !== "undefined") {
+					var arrays = this.discoverDataItem.imagesUrl.split(",");
 
-        while (
-          arrays.length >= 1 &&
-          (arrays[arrays.length - 1] === "" ||
-            arrays[arrays.length - 1] == null)
-        ) {
-          arrays.pop();
-        }
+					while (
+						arrays.length >= 1 &&
+						(arrays[arrays.length - 1] === "" ||
+							arrays[arrays.length - 1] == null)
+					) {
+						arrays.pop();
+					}
 
-        var imgParam = new Map();
-        imgParam.set("width", 678);
-        imgParam.set("height", 308);
-        var myJsonString = Utils.arrayToJson(arrays, imgParam);
+					var imgParam = new Map();
+					imgParam.set("width", 678);
+					imgParam.set("height", 308);
+					var myJsonString = Utils.arrayToJson(arrays, imgParam);
 
-        this.imageUrls = myJsonString;
-      }
+					this.imageUrls = myJsonString;
+				}
 
-      this.id = resData.data.id;
-      // 如果是资讯添加浏览数
-      if (this.isNews) {
-        this.addBrowserNum();
-      }
+				this.id = resData.data.id;
+				// 如果是资讯添加浏览数
+				if (this.isNews) {
+					this.addBrowserNum();
+				}
 
-      this.$event.on("onLikeInfoChange", params => {
-        if (params == null) {
-          this.discoverDataItem.hasLike = !this.discoverDataItem.hasLike;
-          this.discoverDataItem.likeNum += this.discoverDataItem.hasLike
-            ? 1
-            : -1;
-          this.$event.emit("discoveryS", this.discoverDataItem);
-        } else {
-          this.discoverDataItem.hasLike = params.hasLike;
-          this.discoverDataItem.likeNum = params.likeNum;
-        }
-      });
-      this.getCommentList(resData.toReviewArea);
-    });
-  },
-  components: {
-    navbar: navbar,
-    imagenavbar: imagenavbar
-  },
-  methods: {
-    addBrowserNum() {
-      var paramMap = new Map();
-      paramMap.set("id", this.id);
-      this.$fetch({
-        method: "POST", // 大写
-        name: "DISCOVERY.browse", //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
-        data: paramDao.getParamsJSON(paramMap),
-        header: {
-          Authorization: "Bearer  " + this.loginInfo.data.token.access_token
-        }
-      }).then(
-        resData => {
-          if (resData.code === 1000) {
-            this.discoverDataItem.browseNum++;
-            if (typeof this.discoverDataItem.position === "undefined") {
-              this.$event.emit("discoveryS", this.discoverDataItem);
-            } else {
-              this.$event.emit("addBrowser_" + this.curIndex, {
-                position: this.discoverDataItem.position
-              });
-            }
-          }
-        },
-        error => {
-          // 错误回调
-          this.$notice.toast({
-            message: error
-          });
-          console.log(error);
-        }
-      );
-    },
-    onsendComment(event) {
-      if (event.returnKeyType === "send") {
-        this.sendComment(event);
-      }
-    },
-    onCancelEdit() {
-      this.isEdit = false;
-    },
-    onEdit() {
-      this.isEdit = true;
-    },
-    onKeyboard(event) {
-      if (event.isShow) {
-        this.keyboardHeight = 520;
-        // this.$notice.toast({
-        //     message:event
-        // })
-        //   this.keyboardHeight=event.keyboardSize
-        //   this.keyboardHeight=event.keyboardSize
-        // this.$refs.input.scrollIntoViewIfNeeded()
-        // setTimeout(function(){
-        //     console.log('scrollIntoViewIfNeeded');
-        // },400);
+				this.$event.on("onLikeInfoChange", params => {
+					if (params == null) {
+						this.discoverDataItem.hasLike = !this.discoverDataItem.hasLike;
+						this.discoverDataItem.likeNum += this.discoverDataItem.hasLike
+							? 1
+							: -1;
+						this.$event.emit("discoveryS", this.discoverDataItem);
+					} else {
+						this.discoverDataItem.hasLike = params.hasLike;
+						this.discoverDataItem.likeNum = params.likeNum;
+					}
+				});
+				this.getCommentList(resData.toReviewArea);
+			});
+		},
+		components: {
+			navbar: navbar,
+			imagenavbar: imagenavbar
+		},
+		methods: {
+			addBrowserNum() {
+				var paramMap = new Map();
+				paramMap.set("id", this.id);
+				this.$fetch({
+					method: "POST", // 大写
+					name: "DISCOVERY.browse", //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
+					data: paramDao.getParamsJSON(paramMap),
+					header: {
+						Authorization: "Bearer  " + this.loginInfo.data.token.access_token
+					}
+				}).then(
+					resData => {
+						if (resData.code === 1000) {
+							this.discoverDataItem.browseNum++;
+							if (typeof this.discoverDataItem.position === "undefined") {
+								this.$event.emit("discoveryS", this.discoverDataItem);
+							} else {
+								this.$event.emit("addBrowser_" + this.curIndex, {
+									position: this.discoverDataItem.position
+								});
+							}
+						}
+					},
+					error => {
+						// 错误回调
+						this.$notice.toast({
+							message: error
+						});
+						console.log(error);
+					}
+				);
+			},
+			onsendComment(event) {
+				if (event.returnKeyType === "send") {
+					this.sendComment(event);
+				}
+			},
+			onCancelEdit() {
+				this.isEdit = false;
+			},
+			onEdit() {
+				this.isEdit = true;
+			},
+			onKeyboard(event) {
+				if (event.isShow) {
+					this.keyboardHeight = 520;
+					// this.$notice.toast({
+					//     message:event
+					// })
+					//   this.keyboardHeight=event.keyboardSize
+					//   this.keyboardHeight=event.keyboardSize
+					// this.$refs.input.scrollIntoViewIfNeeded()
+					// setTimeout(function(){
+					//     console.log('scrollIntoViewIfNeeded');
+					// },400);
 
-        //       this.$notice.toast({
-        //         message: '执行成功'
-        //   })
-      } else {
-        this.keyboardHeight = 0;
-      }
-    },
+					//       this.$notice.toast({
+					//         message: '执行成功'
+					//   })
+				} else {
+					this.keyboardHeight = 0;
+				}
+			},
 
-    getCommentList(toReviewPosition) {
-      var paramMap = new Map();
-      paramMap.set("newsShareId", this.id);
-      this.$fetch({
-        method: "POST", // 大写
-        name: "DISCOVERY.queryComment", //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
-        data: paramDao.getParamsJSON(paramMap),
-        header: {
-          Authorization: "Bearer  " + this.loginInfo.data.token.access_token
-        }
-      }).then(
-        resData => {
-          this.commentDatas = resData.data.context;
-          if (toReviewPosition) {
-            this.onCancelEdit();
-            setTimeout(() => {
-              this.toReviewPosition();
-            }, 1000);
-          }
-        },
-        error => {
-          // 错误回调
-          this.$notice.toast({
-            message: error
-          });
-          console.log(error);
-        }
-      );
-    },
+			getCommentList(toReviewPosition) {
+				var paramMap = new Map();
+				paramMap.set("newsShareId", this.id);
+				this.$fetch({
+					method: "POST", // 大写
+					name: "DISCOVERY.queryComment", //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
+					data: paramDao.getParamsJSON(paramMap),
+					header: {
+						Authorization: "Bearer  " + this.loginInfo.data.token.access_token
+					}
+				}).then(
+					resData => {
+						this.commentDatas = resData.data.context;
+						if (toReviewPosition) {
+							this.onCancelEdit();
+							setTimeout(() => {
+								this.toReviewPosition();
+							}, 1000);
+						}
+					},
+					error => {
+						// 错误回调
+						this.$notice.toast({
+							message: error
+						});
+						console.log(error);
+					}
+				);
+			},
 
-    sendComment(event) {
-      var commentContext = event.value;
-      var paramMap = new Map();
-      paramMap.set("newsShareId", this.id);
-      paramMap.set("commentContext", encodeURI(commentContext));
-      paramMap.set("userId", this.loginInfo.data.userInfo.userId);
-      this.$fetch({
-        method: "POST", // 大写
-        name: "DISCOVERY.sendComment", //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
-        data: paramDao.getParamsJSON(paramMap),
-        header: {
-          Authorization: "Bearer  " + this.loginInfo.data.token.access_token
-        }
-      }).then(
-        resData => {
-          this.discoverDataItem.commentNum++;
-          this.$event.emit("addComment_" + this.curIndex, {
-            position: this.discoverDataItem.position
-          });
-          this.getCommentList(true);
-        },
-        error => {
-          // 错误回调
-          this.$notice.toast({
-            message: error
-          });
-          console.log(error);
-        }
-      );
-    },
+			sendComment(event) {
+				var commentContext = event.value;
+				var paramMap = new Map();
+				paramMap.set("newsShareId", this.id);
+				paramMap.set("commentContext", encodeURI(commentContext));
+				paramMap.set("userId", this.loginInfo.data.userInfo.userId);
+				this.$fetch({
+					method: "POST", // 大写
+					name: "DISCOVERY.sendComment", //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
+					data: paramDao.getParamsJSON(paramMap),
+					header: {
+						Authorization: "Bearer  " + this.loginInfo.data.token.access_token
+					}
+				}).then(
+					resData => {
+						this.discoverDataItem.commentNum++;
+						this.$event.emit("addComment_" + this.curIndex, {
+							position: this.discoverDataItem.position
+						});
+						this.getCommentList(true);
+					},
+					error => {
+						// 错误回调
+						this.$notice.toast({
+							message: error
+						});
+						console.log(error);
+					}
+				);
+			},
 
-    onWebLoad(event) {
-      this.webHeight = event.contentHeight;
-      this.$notice.toast({
-        message: event.contentHeight
-      });
-    },
+			onWebLoad(event) {
+				this.webHeight = event.contentHeight;
+				this.$notice.toast({
+					message: event.contentHeight
+				});
+			},
 
-    // 图片加载完成
-    onImageLoad(img, event) {
-      if (event.success) {
-        img.height =
-          event.size.naturalHeight * img.width / event.size.naturalWidth;
-      }
-    },
-    // 滚动到评论的其实位置
-    toReviewPosition() {
-      dom.scrollToElement(this.$refs.reviewPosition);
-    },
-    //  动态的点赞和取消点赞
-    onlike(itemData) {
-      this.$event.emit("onlike_" + this.curIndex, itemData);
-    },
-    // 评论的点赞和取消点赞
-    onCommentlike(index) {
-      this.commentDatas[index].isLike = !this.commentDatas[index].isLike;
-    },
-    // 点击触发评论输入界面
-    inputCommentClick() {
-      this.$router.open({
-        name: "commentinput",
-        type: "PUSH"
-      });
-    }
-  },
-  data() {
-    return {
-      webHeight: 200,
-      position: -1,
-      curIndex: -1,
-      isNews: false,
-      id: "",
-      loginInfo: null,
-      onBackTag: "onDetailBack",
-      keyboardHeight: 0,
-      isEdit: false,
-      imageUrls: null,
-      backgroundColor: "#272C39",
-      discoverDataItem: null,
-      commentDatas: null
-    };
-  }
-};
+			// 图片加载完成
+			onImageLoad(img, event) {
+				if (event.success) {
+					img.height =
+						(event.size.naturalHeight * img.width) / event.size.naturalWidth;
+				}
+			},
+			// 滚动到评论的其实位置
+			toReviewPosition() {
+				dom.scrollToElement(this.$refs.reviewPosition);
+			},
+			//  动态的点赞和取消点赞
+			onlike(itemData) {
+				this.$event.emit("onlike_" + this.curIndex, itemData);
+			},
+			// 评论的点赞和取消点赞
+			onCommentlike(index) {
+				this.commentDatas[index].isLike = !this.commentDatas[index].isLike;
+			},
+			// 点击触发评论输入界面
+			inputCommentClick() {
+				this.$router.open({
+					name: "commentinput",
+					type: "PUSH"
+				});
+			}
+		},
+		data() {
+			return {
+				webHeight: 200,
+				position: -1,
+				curIndex: -1,
+				isNews: false,
+				id: "",
+				loginInfo: null,
+				onBackTag: "onDetailBack",
+				keyboardHeight: 0,
+				isEdit: false,
+				imageUrls: null,
+				backgroundColor: "#272C39",
+				discoverDataItem: null,
+				commentDatas: null
+			};
+		}
+	};
 </script>

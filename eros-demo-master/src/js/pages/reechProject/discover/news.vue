@@ -127,7 +127,6 @@
 	export default {
 		props: ["discoverData", "isRefreshShow", "isLoadingShow", "index"],
 		created() {
-			this.loginInfo = this.$storage.getSync("loginInfo");
 			// 添加喜欢
 			this.$event.on("onlike_" + this.index, itemData => {
 				this.onlike(itemData, -1);
@@ -154,7 +153,6 @@
 		data() {
 			return {
 				test: false,
-				loginInfo: null,
 				refreshStateStr: "下拉刷新",
 				lastRefreshTime: "最后更新：" + paramDao.dateFormat(),
 				loadingStateStr: "上拉加载",
@@ -181,9 +179,10 @@
 			},
 			//  动态的点赞和取消点赞
 			onlike(itemData, index) {
+				var loginInfo = this.$storage.getSync("loginInfo");
 				var paramMap = new Map();
 				paramMap.set("newsShareId", itemData.id);
-				paramMap.set("userId", this.loginInfo.data.userInfo.userId);
+				paramMap.set("userId", loginInfo.data.userInfo.userId);
 				this.$fetch({
 					method: "POST", // 大写
 					name: !itemData.hasLike
@@ -191,7 +190,7 @@
 						: "DISCOVERY.removeLikes", //当前是在apis中配置的别名，你也可以直接绝对路径请求 如：url:http://xx.xx.com/xxx/xxx
 					data: paramDao.getParamsJSON(paramMap),
 					header: {
-						Authorization: "Bearer  " + this.loginInfo.data.token.access_token
+						Authorization: "Bearer  " + loginInfo.data.token.access_token
 					}
 				}).then(
 					resData => {

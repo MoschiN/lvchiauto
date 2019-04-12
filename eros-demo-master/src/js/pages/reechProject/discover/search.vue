@@ -173,6 +173,7 @@
 		methods: {
 			clearText(event) {
 				this.valueText = new String();
+				this.searchData = [];
 			},
 			splitToArray(content) {
 				var key = this.valueText;
