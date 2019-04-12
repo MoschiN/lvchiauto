@@ -21,17 +21,14 @@
 					<image style="width:33px;height:34px;" src="bmlocal://assets/follow.png">
 				</div>
 				<web
-					v-if="discoverDataItem.isNews=='news'"
+					v-if="isNews"
 					ref="h5web"
 					style="margin-top:40px;size:28px;color:#DDE2EC;width:750px;"
 					:data="discoverDataItem.context"
 					:style="{height:webHeight}"
 					@pagefinish="onWebLoad"
 				></web>
-				<text
-					v-if="discoverDataItem.isNews!=='news'"
-					style="margin-top:40px;size:28px;color:#DDE2EC;"
-				>{{discoverDataItem.title}}</text>
+				<text v-if="!isNews" style="margin-top:40px;size:28px;color:#DDE2EC;">{{discoverDataItem.title}}</text>
 
 				<image
 					v-for="(img,i) in imageUrls"
@@ -206,6 +203,7 @@
 						this.discoverDataItem.likeNum = params.likeNum;
 					}
 				});
+				this.toReviewArea = resData.toReviewArea;
 				this.getCommentList(resData.toReviewArea);
 			});
 		},
@@ -293,9 +291,11 @@
 						this.commentDatas = resData.data.context;
 						if (toReviewPosition) {
 							this.onCancelEdit();
-							setTimeout(() => {
-								this.toReviewPosition();
-							}, 1000);
+							if (!this.isNews) {
+								setTimeout(() => {
+									this.toReviewPosition();
+								}, 1000);
+							}
 						}
 					},
 					error => {
@@ -341,9 +341,11 @@
 
 			onWebLoad(event) {
 				this.webHeight = event.contentHeight;
-				this.$notice.toast({
-					message: event.contentHeight
-				});
+				if (this.isNews && this.toReviewArea) {
+					setTimeout(() => {
+						this.toReviewPosition();
+					}, 1000);
+				}
 			},
 
 			// 图片加载完成
@@ -375,6 +377,7 @@
 		},
 		data() {
 			return {
+				toReviewArea: false,
 				webHeight: 200,
 				position: -1,
 				curIndex: -1,
