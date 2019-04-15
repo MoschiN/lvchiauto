@@ -234,9 +234,6 @@
 				});
 			},
 			onRefresh(event) {
-				this.$notice.toast({
-					message: "refresh()"
-				});
 				this.$event.emit("discoveryQ", {
 					index: 3,
 					isRefresh: 1,
