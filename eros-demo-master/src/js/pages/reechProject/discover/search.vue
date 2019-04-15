@@ -62,9 +62,15 @@
 							v-if="typeof item.imagesUrl==='undefined'"
 							style="height:120px;margin-top:48px;margin-bottom:48px;"
 						></div>
-						<div style="margin-top:48px;flex:1;">
-							<bmrichtext style="color:#FFFFFF;font-size:28px;" :style="{lines:3,textOverflow:ellipsis,}">
-								<div v-for="(v,i) in splitToArray(item.title)" :key="i">
+						<div style="margin-top:48px;margin-bottom:48px;flex:1;">
+							<bmrichtext
+								style="color:#FFFFFF;font-size:28px;"
+								:style="{lines:item.isNews==='news'?1:3,textOverflow:ellipsis,}"
+							>
+								<div
+									v-for="(v,i) in item.isNews==='news'?splitToArray(item.title):splitToArrayLimit(item.title,3)"
+									:key="i"
+								>
 									<bmspan :value="v" :style="{color:i%2===0?'#FFFFFF':'#43CBA8'}"></bmspan>
 								</div>
 							</bmrichtext>
@@ -72,13 +78,13 @@
 								v-if="item.isNews==='news'"
 								style="margin-top:14px;lines:2;color:#ffffff;font-size:24px;flex-direction:row;flex-wrap:wrap;text-overflow:ellipsis"
 							>
-								<div v-for="(v,i) in splitToArray(item.contextTxt)" :key="i">
+								<div v-for="(v,i) in splitToArrayLimit(item.contextTxt,2)" :key="i">
 									<bmspan :value="v" :style="{color:i%2===0?'#FFFFFF':'#43CBA8'}"></bmspan>
 								</div>
 							</bmrichtext>
 						</div>
 					</div>
-					<div style="width:auto;height:1px;background-color:#1A2131"></div>
+					<div style="width:auto;height:1px;background-color:#1A2131;"></div>
 				</cell>
 				<loading
 					@loading="onLoading"
@@ -182,6 +188,36 @@
 				var resultArray = new Array();
 				if (srcArray != null) {
 					for (var i = 0; i < srcArray.length; i++) {
+						resultArray[2 * i] = srcArray[i];
+						if (i < srcArray.length - 1) resultArray[2 * i + 1] = key;
+					}
+				}
+				return resultArray;
+			},
+			splitToArrayLimit(content, maxLines) {
+				var key = this.valueText;
+				if (!key) return [content];
+				var srcArray = content.split(key);
+				var resultArray = new Array();
+				if (srcArray != null) {
+					var tempLength = 5;
+					for (var i = 0; i < srcArray.length; i++) {
+						//第一个元素,如果超过指定长度,只保留后面,前面加省略号
+						if (i === 0) {
+							if (srcArray[i].length > tempLength) {
+								srcArray[i] =
+									"..." + srcArray[i].substring(srcArray[i].length - tempLength);
+							}
+						} else if (i === srcArray[i].length - 1) {
+						} else {
+							if (srcArray[i].length > 2 * tempLength) {
+								srcArray[i] =
+									srcArray[i].substring(0, tempLength) +
+									"..." +
+									srcArray[i].substring(srcArray[i].length - tempLength);
+							}
+						}
+
 						resultArray[2 * i] = srcArray[i];
 						if (i < srcArray.length - 1) resultArray[2 * i + 1] = key;
 					}
