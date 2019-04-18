@@ -78,7 +78,10 @@
 								v-if="item.isNews==='news'"
 								style="margin-top:14px;lines:2;color:#ffffff;font-size:24px;flex-direction:row;flex-wrap:wrap;text-overflow:ellipsis"
 							>
-								<div v-for="(v,i) in splitToArrayLimit(item.contextTxt,2)" :key="i">
+								<div
+									v-for="(v,i) in splitToArrayLimit(item.contextTxt,2,typeof item.imagesUrl!=='undefined')"
+									:key="i"
+								>
 									<bmspan :value="v" :style="{color:i%2===0?'#FFFFFF':'#43CBA8'}"></bmspan>
 								</div>
 							</bmrichtext>
@@ -194,27 +197,39 @@
 				}
 				return resultArray;
 			},
-			splitToArrayLimit(content, maxLines) {
+			splitToArrayLimit(content, maxLines, hasImage) {
 				var key = this.valueText;
 				if (!key) return [content];
 				var srcArray = content.split(key);
 				var resultArray = new Array();
 				if (srcArray != null) {
-					var tempLength = 5;
+					// 计算最多可以容纳多少字
+					var maxWords = maxLines * (hasImage ? 15 : 20);
+					// 统计前三关键字的涉及的字总数
+					var lastThreeLength = 0;
+					// 每个段平均字数
+					var tempLength = Math.round((maxWords - 3 * key.length) / 4);
+					var halfTempLength = Math.round(tempLength / 2);
 					for (var i = 0; i < srcArray.length; i++) {
-						//第一个元素,如果超过指定长度,只保留后面,前面加省略号
-						if (i === 0) {
-							if (srcArray[i].length > tempLength) {
+						var tLen = srcArray[i].length;
+						//去掉空格回车之类的
+						var s = srcArray[i];
+						// 去掉转义字符
+						s = s.replace(/[\'\"\\\/\b\f\n\r\t]/g, "");
+						// 去掉特殊字符
+						s = s.replace(/[\@\#\$\%\^\&\*\(\)\{\}\:\"\L\<\>\?\[\]]/);
+						s = s.replace(".", "");
+						srcArray[i] = s;
+						if (tLen > tempLength) {
+							if (i === 0) {
 								srcArray[i] =
-									"..." + srcArray[i].substring(srcArray[i].length - tempLength);
-							}
-						} else if (i === srcArray[i].length - 1) {
-						} else {
-							if (srcArray[i].length > 2 * tempLength) {
+									"..." + srcArray[i].substring(tLen - halfTempLength);
+							} else if (i === srcArray.length - 1) {
+							} else {
 								srcArray[i] =
-									srcArray[i].substring(0, tempLength) +
+									srcArray[i].substring(0, halfTempLength) +
 									"..." +
-									srcArray[i].substring(srcArray[i].length - tempLength);
+									srcArray[i].substring(tLen - halfTempLength);
 							}
 						}
 
