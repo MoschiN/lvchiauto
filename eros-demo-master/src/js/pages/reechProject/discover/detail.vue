@@ -2,84 +2,106 @@
 	<!--根布局-->
 	<div>
 		<div style="background-color:#272C39;flex:1;">
-			<navbar :onBackTag="onBackTag"></navbar>
-			<scroller class="content" show-scrollbar="false">
-				<div
-					v-if="!isNews"
-					style="width:auto;height:auto;flex-direction:row;justify-content:space-between;align-items:center;margin-top:34px;"
-				>
-					<div style="flex-direction:row;">
-						<image
-							style="background-color:#323845;width:64px;height:64px;margin-right:26px;border-radius:32px;"
-							:src="typeof discoverDataItem.pushUserHeadPortraitUrl==='undefined'||discoverDataItem.pushUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':discoverDataItem.pushUserHeadPortraitUrl"
-						>
-						<div>
-							<text style="color:white;size:28px;">{{discoverDataItem.pushUserNick}}</text>
-							<text style="color:#9BA3B2;size:22px;">{{discoverDataItem.createTime}}</text>
-						</div>
-					</div>
-					<image style="width:33px;height:34px;" src="bmlocal://assets/follow.png">
-				</div>
-				<web
-					v-if="isNews"
-					ref="h5web"
-					style="margin-top:40px;size:28px;color:#DDE2EC;width:750px;"
-					:data="discoverDataItem.context"
-					:style="{height:webHeight}"
-					@pagefinish="onWebLoad"
-				></web>
-				<text v-if="!isNews" style="margin-top:40px;size:28px;color:#DDE2EC;">{{discoverDataItem.title}}</text>
+			<div
+				v-if="!isNews||(imageUrls==null||imageUrls.size===0)"
+				style="width:auto;"
+				:style="{marginTop:statusHeight,height:98}"
+			></div>
 
-				<image
-					v-for="(img,i) in imageUrls"
-					:key="i"
-					:src="img.value"
-					:style="{backgroundColor:'#323845',width:img.width,height:img.height,marginTop:40,marginBottom:0}"
-					@load="onImageLoad(img,$event)"
-				>
-				<div style="flex-direction:row;margin-top:37px;justify-content:flex-end;align-items:center;">
-					<image v-if="isNews" style="width:34px;height:21px;" src="bmlocal://assets/browse_num.png">
-					<text
-						v-if="isNews"
-						style="size:26px;color:#9BA3B2;margin-left:8px;"
-					>{{discoverDataItem.browseNum}}</text>
-					<div style="flex:1;"></div>
+			<scroller show-scrollbar="false">
+				<div v-if="isNews">
 					<image
-						style="width:44px;height:44px;"
-						:src="discoverDataItem.hasLike?'bmlocal://assets/like_icon.png':'bmlocal://assets/un_like_icon.png'"
-						@click="onlike(discoverDataItem)"
+						v-for="(img,i) in imageUrls"
+						:key="i"
+						:src="img.value"
+						:style="{backgroundColor:'#323845',width:750,height:750*img.height/img.width,}"
+						@load="onImageLoad(img,$event)"
 					>
-					<text style="size:26px;color:#9BA3B2;margin-left:6px;">{{discoverDataItem.likeNum}}</text>
 				</div>
-				<text style="color:white;size:38px;margin-top:69px;margin-bottom:8px;" ref="reviewPosition">评论</text>
-
-				<div v-for="(commentItem,index) in commentDatas" :key="index">
+				<div class="content">
 					<div
-						style="flex-direction:row;align-items:center;justify-content:space-between;margin-top:32px;"
+						v-if="!isNews"
+						style="width:auto;height:auto;flex-direction:row;justify-content:space-between;align-items:center;margin-top:34px;"
 					>
-						<div style="flex-direction:row;align-items:center;">
+						<div style="flex-direction:row;">
 							<image
-								style="background-color:#323845;width:64px;height:64px;border-radius:32px;"
-								:src="typeof commentItem.commentUserHeadPortraitUrl==='undefined'||commentItem.commentUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':commentItem.commentUserHeadPortraitUrl"
+								style="background-color:#323845;width:64px;height:64px;margin-right:26px;border-radius:32px;"
+								:src="typeof discoverDataItem.pushUserHeadPortraitUrl==='undefined'||discoverDataItem.pushUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':discoverDataItem.pushUserHeadPortraitUrl"
 							>
-							<text style="margin-left:24px;size:28px;color:#DDE2EC;">{{commentItem.commentUserNickName}}</text>
+							<div>
+								<text style="color:white;size:28px;">{{discoverDataItem.pushUserNick}}</text>
+								<text style="color:#9BA3B2;size:22px;">{{discoverDataItem.createTime}}</text>
+							</div>
 						</div>
-						<div v-if="false" style="flex-direction:row;align-items:center;">
-							<image
-								style="width:44px;height:44px;"
-								src="bmlocal://assets/like_icon.png"
-								@click="onCommentlike(index)"
-							>
-							<text style="size:26px;color:#9BA3B2;margin-left:6px;">26</text>
-						</div>
+						<image style="width:33px;height:34px;" src="bmlocal://assets/follow.png">
 					</div>
+					<web
+						v-if="isNews"
+						ref="h5web"
+						style="margin-top:40px;size:28px;color:#DDE2EC;width:750px;background-color:transation;"
+						:data="discoverDataItem.context"
+						:style="{height:webHeight}"
+						@pagefinish="onWebLoad"
+					></web>
 					<text
-						style="margin-top:24px;margin-bottom:16px;size:28px;color:#DDE2EC;"
-					>{{decodeURI(commentItem.commentContext)}}</text>
-					<text style="size:22px;color:#9BA3B2;margin-bottom:32px;">{{commentItem.createTime}}</text>
-					<div style="width:auto;height:1px;background-color:#1A2131;"></div>
+						v-if="!isNews"
+						style="margin-top:40px;size:28px;color:#DDE2EC;"
+					>{{discoverDataItem.title}}</text>
+					<div v-if="!isNews">
+						<image
+							v-for="(img,i) in imageUrls"
+							:key="i"
+							:src="img.value"
+							:style="{backgroundColor:'#323845',width:img.width,height:img.height,marginTop:40,marginBottom:0}"
+							@load="onImageLoad(img,$event)"
+						>
+					</div>
+					<div style="flex-direction:row;margin-top:37px;justify-content:flex-end;align-items:center;">
+						<image v-if="isNews" style="width:34px;height:21px;" src="bmlocal://assets/browse_num.png">
+						<text
+							v-if="isNews"
+							style="size:26px;color:#9BA3B2;margin-left:8px;"
+						>{{discoverDataItem.browseNum}}</text>
+						<div style="flex:1;"></div>
+						<image
+							style="width:44px;height:44px;"
+							:src="discoverDataItem.hasLike?'bmlocal://assets/like_icon.png':'bmlocal://assets/un_like_icon.png'"
+							@click="onlike(discoverDataItem)"
+						>
+						<text style="size:26px;color:#9BA3B2;margin-left:6px;">{{discoverDataItem.likeNum}}</text>
+					</div>
+					<text style="color:white;size:38px;margin-top:69px;margin-bottom:8px;" ref="reviewPosition">评论</text>
+
+					<div v-for="(commentItem,index) in commentDatas" :key="index">
+						<div
+							style="flex-direction:row;align-items:center;justify-content:space-between;margin-top:32px;"
+						>
+							<div style="flex-direction:row;align-items:center;">
+								<image
+									style="background-color:#323845;width:64px;height:64px;border-radius:32px;"
+									:src="typeof commentItem.commentUserHeadPortraitUrl==='undefined'||commentItem.commentUserHeadPortraitUrl==='null'?'bmlocal://assets/upload_head_icon.png':commentItem.commentUserHeadPortraitUrl"
+								>
+								<text style="margin-left:24px;size:28px;color:#DDE2EC;">{{commentItem.commentUserNickName}}</text>
+							</div>
+							<div v-if="false" style="flex-direction:row;align-items:center;">
+								<image
+									style="width:44px;height:44px;"
+									src="bmlocal://assets/like_icon.png"
+									@click="onCommentlike(index)"
+								>
+								<text style="size:26px;color:#9BA3B2;margin-left:6px;">26</text>
+							</div>
+						</div>
+						<text
+							style="margin-top:24px;margin-bottom:16px;size:28px;color:#DDE2EC;"
+						>{{decodeURI(commentItem.commentContext)}}</text>
+						<text style="size:22px;color:#9BA3B2;margin-bottom:32px;">{{commentItem.createTime}}</text>
+						<div style="width:auto;height:1px;background-color:#1A2131;"></div>
+					</div>
 				</div>
 			</scroller>
+
+			<navbar :onBackTag="onBackTag" style="position: absolute;left: 0px;top: 0px;right:0px;"></navbar>
 			<div
 				style="flex-direction:row;align-items:center;height:98px;width:auto;margin-left:36px;margin-right:36px;"
 				@click="inputCommentClick"
@@ -137,8 +159,8 @@
 	}
 
 	.content {
-		padding-left: 36px;
-		padding-right: 36px;
+		margin-left: 36px;
+		margin-right: 36px;
 		background-color: #272c39;
 	}
 </style>
@@ -377,6 +399,9 @@
 		},
 		data() {
 			return {
+				statusHeight: Number.parseInt(
+					this.statusBarHeight || weex.config.env.statusBarHeight || 40
+				),
 				toReviewArea: false,
 				webHeight: 200,
 				position: -1,
