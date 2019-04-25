@@ -204,7 +204,7 @@
 					}
 				});
 				this.toReviewArea = resData.toReviewArea;
-				this.getCommentList(resData.toReviewArea);
+				this.getCommentList(resData.toReviewArea, this.isNews);
 			});
 		},
 		components: {
@@ -276,7 +276,7 @@
 				}
 			},
 
-			getCommentList(toReviewPosition) {
+			getCommentList(toReviewPosition, isDelay) {
 				var paramMap = new Map();
 				paramMap.set("newsShareId", this.id);
 				this.$fetch({
@@ -291,7 +291,7 @@
 						this.commentDatas = resData.data.context;
 						if (toReviewPosition) {
 							this.onCancelEdit();
-							if (!this.isNews) {
+							if (!isDelay) {
 								setTimeout(() => {
 									this.toReviewPosition();
 								}, 1000);
@@ -327,7 +327,7 @@
 						this.$event.emit("addComment_" + this.curIndex, {
 							position: this.discoverDataItem.position
 						});
-						this.getCommentList(true);
+						this.getCommentList(true, false);
 					},
 					error => {
 						// 错误回调
